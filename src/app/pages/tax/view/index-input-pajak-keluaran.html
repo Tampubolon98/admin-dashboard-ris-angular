@@ -1,0 +1,180 @@
+<div class="text-xl font-semibold bg-red-600 text-white p-4 rounded-t">
+   Input Pajak Keluaran
+</div>
+<div class="card">
+    <div class="flex flex-col gap-6 w-full">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="unit">Operating Unit</label>
+            <p-select 
+                [options]="unitOptions"
+                [(ngModel)]="selectedUnit"
+                optionLabel="label"
+                [showClear]="true"
+                placeholder="Pilih Operating Unit"
+                inputId="unit"
+                class="w-100">
+            </p-select>
+        </div>
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-100">
+                <label for="storecode">Store Code</label>
+                <input type="text" pInputText id="storecode">
+            </div>
+    
+            <div class="flex flex-col gap-2">
+                <label for="invoicedate">Invoice Date</label>
+                <div class="flex flex-row gap-4 w-full items-center">
+                    <p-datepicker
+                        [(ngModel)]="invoiceDate"
+                        class="w-95"
+                        [showIcon]="true"
+                        inputId="invoicedate"
+                        [showOnFocus]="false" />
+    
+                    <span class="font-bold">To</span>
+    
+                    <p-datepicker
+                        [(ngModel)]="invoiceDate"
+                        class="w-98"
+                        [showIcon]="true"
+                        inputId="invoicedate"
+                        [showOnFocus]="false" />
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-100">
+                <label for="invoiceno">Invoice No</label>
+                <input type="text" pInputText id="invoiceno">
+            </div>
+    
+            <div class="flex flex-col gap-2 w-100">
+                <label for="supplier">Supplier</label>
+                <input type="text" pInputText id="supplier">
+            </div>
+    
+            <div class="flex flex-col gap-2 w-100">
+                <label for="transactioncode">Transaction Code</label>
+                <input type="text" pInputText id="transactioncode">
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-full">
+                <p-button label="Generate" severity="secondary" icon="pi pi-sync"></p-button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <p-table
+        #dt1
+        [value]="customers1"
+        dataKey="id"
+        [rows]="10"
+        [loading]="loading"
+        [rowHover]="true"
+        [showGridlines]="true"
+        [paginator]="true"
+        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        responsiveLayout="scroll"
+    >
+        <ng-template #caption>
+            <div class="flex justify-between items-center flex-column sm:flex-row">
+                <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                <p-iconfield iconPosition="left" class="ml-auto">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template #header>
+            <tr>
+                <th style="min-width: 12rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        ID Karyawan
+                        <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width: 12rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Nama Karyawan
+                        <p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by country"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width: 14rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Tanggal Masuk
+                        <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                            <ng-template #header>
+                                <div class="px-3 pt-3 pb-0">
+                                    <span class="font-bold">Agent Picker</span>
+                                </div>
+                            </ng-template>
+                            <ng-template #filter let-value let-filter="filterCallback">
+                                <p-multiselect [ngModel]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" styleClass="w-full">
+                                    <ng-template let-option #item>
+                                        <div class="flex items-center gap-2 w-44">
+                                            <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="32" />
+                                            <span>{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiselect>
+                            </ng-template>
+                        </p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Kode Toko
+                        <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Supplier
+                        <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-customer>
+            <tr>
+                <td>
+                    {{ customer.name }}
+                </td>
+                <td>
+                    <div class="flex items-center gap-2">
+                        <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + customer.country.code" width="30" />
+                        <span>{{ customer.country.name }}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex items-center gap-2">
+                        <img [alt]="customer.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
+                        <span class="image-text">{{ customer.representative.name }}</span>
+                    </div>
+                </td>
+                <td>
+                    {{ customer.date | date: 'MM/dd/yyyy' }}
+                </td>
+                <td>
+                    {{ customer.balance | currency: 'USD' : 'symbol' }}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="8">No customers found.</td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr>
+                <td colspan="8">Loading customers data. Please wait.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

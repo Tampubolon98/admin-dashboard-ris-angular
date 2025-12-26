@@ -17,6 +17,7 @@ export interface Customer {
     country?: Country;
     company?: string;
     date?: string;
+    balance?: number;
     status?: string;
     activity?: number;
     representative?: Representative;

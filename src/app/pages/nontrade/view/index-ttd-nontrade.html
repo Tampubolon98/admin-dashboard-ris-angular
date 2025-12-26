@@ -1,0 +1,28 @@
+<p-tabs value="0">
+    <div class="font-semibold bg-red-600 text-white pt-2 rounded-t">
+        <div class="flex flex-col md:flex-row w-full">
+            <span class="p-2 mr-2">TTD NonTrade</span>
+            
+            <p-tablist class="custom-tablist p-ink-bar">
+                <p-tab value="0"><div><button class="p-tab-nav">Form</button></div></p-tab>
+                <p-tab value="1"><div><button class="p-tab-nav">List</button></div></p-tab>
+                <p-tab value="2"><div><button class="p-tab-nav">History</button></div></p-tab>
+            </p-tablist>
+        </div>
+    </div>
+    
+    <div class="card">
+        <p-tabpanels>
+            <p-tabpanel value="0">
+                <app-ttd-nontrade-form></app-ttd-nontrade-form>
+            </p-tabpanel>
+            <p-tabpanel value="1">
+                <app-ttd-nontrade-list></app-ttd-nontrade-list>
+            </p-tabpanel>
+            <p-tabpanel value="2">
+                <app-ttd-nontrade-history></app-ttd-nontrade-history>
+            </p-tabpanel>
+        </p-tabpanels>
+    </div>
+</p-tabs>
+

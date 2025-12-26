@@ -1,0 +1,94 @@
+<div class="card flex flex-col gap-6 w-full">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="kategorikaryawan">Supplier</label>
+            <p-select 
+                [options]="categoryOptions"
+                [(ngModel)]="selectedCategory"
+                optionLabel="label"
+                [showClear]="true"
+                placeholder="Pilih Supplier"
+                class="w-full"
+            >
+            </p-select>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-full">
+                <label for="fullname">Masa Pajak</label>
+                <p-datepicker 
+                    [(ngModel)]="date2" 
+                    [showIcon]="true" 
+                    [dateFormat]="dateFormat"
+                    inputId="date_birth" 
+                    [showOnFocus]="false" />
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+                <label for="date_birth">NPWP</label>
+                <input pInputText id="fullname" type="text" />
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-full">
+                <label for="fullname">Tanggal Penerimaan</label>
+                <p-datepicker 
+                    [(ngModel)]="date2" 
+                    [showIcon]="true" 
+                    [dateFormat]="dateFormat"
+                    inputId="date_birth" 
+                    [showOnFocus]="false" />
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+                <label for="date_birth">Faktur</label>
+                <input pInputText id="fullname" type="text" />
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-full">
+                <label for="fullname">Tax Date</label>
+                <p-datepicker 
+                    [(ngModel)]="date2" 
+                    [showIcon]="true" 
+                    [dateFormat]="dateFormat"
+                    inputId="date_birth" 
+                    [showOnFocus]="false" />
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+                <label for="date_birth">Tax Series</label>
+                <input pInputText id="fullname" type="text" />
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-full">
+                <label for="fullname">DPP</label>
+                <input pInputText id="fullname" type="text" />
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+                <label for="date_birth">DPP Nilai Lain</label>
+                <input pInputText id="fullname" type="text" />
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-col gap-2 w-full">
+                <label for="fullname">PPN</label>
+                <input pInputText id="fullname" type="text" />
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+                <label for="date_birth">Release</label>
+                <p-checkbox id="checkOption1" name="option" value="Chicago" />
+            </div>
+        </div>
+
+        <div class="mt-4 flex justify-end">
+            <button pButton size="small" label="Simpan" (click)="save()" class="mr-2" icon="pi pi-save"></button>
+            <button pButton size="small" label="Batal" severity="danger" (click)="close()" icon="pi pi-times"></button>
+        </div>
+    </div>
