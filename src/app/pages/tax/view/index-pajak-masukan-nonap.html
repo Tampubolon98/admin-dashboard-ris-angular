@@ -10,7 +10,8 @@
                     [(ngModel)]="periodeAwal"
                     [showIcon]="true"
                     inputId="periodeAwal"
-                    [showOnFocus]="false"/>
+                    (ngModelChange)="onPeriodeAwalChange($event)"
+                    dateFormat="dd-mm-yy"/>
             </div>
 
             <div class="flex flex-col gap-2 w-full">
@@ -21,10 +22,10 @@
                         class="w-100"
                         [showIcon]="true"
                         inputId="periodeAkhir"
-                        [showOnFocus]="false"
-                        disabled/>
+                        [disabled]="true"
+                        dateFormat="dd-mm-yy"/>
     
-                    <p-button label="Tampilkan Data" severity="info" icon="pi pi-search-plus" class="w-100"></p-button>
+                    <p-button label="Tampilkan Data" severity="info" icon="pi pi-search-plus" class="w-100" (click)="loadTaxNonap()"></p-button>
                 </div>
             </div>
         </div>
@@ -33,15 +34,19 @@
     <div class="flex flex-col gap-6 w-full mt-8">
         <p-table
             #dt1
-            [value]="customers1"
-            dataKey="id"
+            [value]="taxnonap"
+            dataKey="faktur_rmy"
             [rows]="10"
             [loading]="loading"
             [rowHover]="true"
             [showGridlines]="true"
             [paginator]="true"
-            [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+            [globalFilterFields]="['supplier_code', 'no_seri', 'faktur_rmy', 'release', 'dpp', 'ppn']"
             responsiveLayout="scroll"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            editMode="row"
         >
             <ng-template #caption>
                 <div class="flex gap-6 w-full justify-end">
@@ -60,144 +65,156 @@
             </ng-template>
             <ng-template #header>
                 <tr>
-                    <th style="min-width: 12rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
-                            Supplier
-                            <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
-                        </div>
-                    </th>
-                    <th style="min-width: 12rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
-                            Masa Pajak
-                            <p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by country"></p-columnFilter>
-                        </div>
-                    </th>
-                    <th style="min-width: 14rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
-                            Tanggal Penerimaan
-                            <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                                <ng-template #header>
-                                    <div class="px-3 pt-3 pb-0">
-                                        <span class="font-bold">Agent Picker</span>
-                                    </div>
-                                </ng-template>
-                                <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [ngModel]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" styleClass="w-full">
-                                        <ng-template let-option #item>
-                                            <div class="flex items-center gap-2 w-44">
-                                                <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="32" />
-                                                <span>{{ option.name }}</span>
-                                            </div>
-                                        </ng-template>
-                                    </p-multiselect>
-                                </ng-template>
-                            </p-columnFilter>
-                        </div>
-                    </th>
                     <th style="min-width: 10rem; background-color: red; color: white;">
+                        <div style="text-align: center; vertical-align: middle;">
+                            Supplier
+                        </div>
+                    </th>
+                    <th style="min-width: 8rem; background-color: red; color: white;">
+                        <div style="text-align: center; vertical-align: middle;">
+                            Masa Pajak
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem; background-color: red; color: white;">
+                        <div style="text-align: center; vertical-align: middle;">
+                            Tanggal Penerimaan
+                        </div>
+                    </th>
+                    <th pSortableColumn="faktur_rmy" style="min-width: 10rem; background-color: red; color: white;">
                         <div class="flex justify-between items-center">
                             Faktur
-                            <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
+                            <p-sortIcon field="faktur_rmy" />
                         </div>
                     </th>
-                    <th style="min-width: 10rem; background-color: red; color: white;">
+                    <th pSortableColumn="no_seri" style="min-width: 10rem; background-color: red; color: white;">
                         <div class="flex justify-between items-center">
                             Tax Series
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+                            <p-sortIcon field="no_seri" />
                         </div>
                     </th>
                     <th style="min-width: 10rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-center items-center">
                             Tax Date
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
                         </div>
                     </th>
                     <th style="min-width: 10rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-end items-center">
                             DPP
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
                         </div>
                     </th>
                     <th style="min-width: 10rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-end items-center">
                             DPP Nilai Lain
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
                         </div>
                     </th>
-                    <th style="min-width: 10rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
-                            PPN
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+                    <th pSortableColumn="ppn" style="min-width: 10rem; background-color: red; color: white;">
+                        <div class="flex justify-end items-center">
+                            ppn
+                            <p-sortIcon field="ppn" />
                         </div>
                     </th>
-                    <th style="min-width: 10rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
+                    <th style="min-width: 6rem; background-color: red; color: white;">
+                        <div class="flex justify-center items-center">
                             Release
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
                         </div>
                     </th>
-                    <th style="min-width: 10rem; background-color: red; color: white;">
-                        <div class="flex justify-between items-center">
+                    <th style="min-width: 8rem; background-color: red; color: white;">
+                        <div class="flex justify-center items-center">
                             Action
                         </div>
                     </th>
                 </tr>
             </ng-template>
-            <ng-template #body let-customer>
-                <tr>
-                    <td>
-                        {{ customer.name }}
+            <ng-template #body let-taxnonap let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="taxnonap" (click)="onRowSelect(taxnonap)" [class.selected-row]="selectedRow?.faktur_rmy === taxnonap.faktur_rmy" style="cursor: pointer;">
+                    <td style="text-align: center; vertical-align: middle;">
+                        {{ taxnonap.supplier_code || '-' }}
                     </td>
-                    <td>
-                        <div class="flex items-center gap-2">
-                            <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + customer.country.code" width="30" />
-                            <span>{{ customer.country.name }}</span>
-                        </div>
+                    <td style="text-align: center; vertical-align: middle;">
+                        {{ taxnonap.pay_date | date: 'dd-MM-yyyy' }}
                     </td>
-                    <td>
-                        <div class="flex items-center gap-2">
-                            <img [alt]="customer.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
-                            <span class="image-text">{{ customer.representative.name }}</span>
-                        </div>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input pInputText type="text" [ngModel]="formatDateInput(taxnonap.tgl_faktur)" (ngModelChange)="onDateChange($event, taxnonap)">
+                            </ng-template>
+                            <ng-template #output>
+                                {{ taxnonap.tgl_faktur | date: 'dd-MM-yyyy' }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        {{ customer.date | date: 'MM/dd/yyyy' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        {{ taxnonap.faktur_rmy || '-' }}
                     </td>
-                    <td>
-                        {{ customer.balance | currency: 'USD' : 'symbol' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText [(ngModel)]="taxnonap.no_seri">
+                            </ng-template>
+                            <ng-template #output>
+                                {{ taxnonap.no_seri }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        {{ customer.balance | currency: 'USD' : 'symbol' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText [ngModel]="formatDateInput(taxnonap.tax_date)" (ngModelChange)="onDateChange($event, taxnonap)">
+                            </ng-template>
+                            <ng-template #output>
+                                {{ taxnonap.tax_date | date: 'dd-MM-yyyy' }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        {{ customer.balance | currency: 'USD' : 'symbol' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <p-inputNumber [(ngModel)]="taxnonap.dpp" mode="currency" currency="IDR" locale="id-ID" (ngModelChange)="calculateFromDPP(taxnonap)"></p-inputNumber>
+                            </ng-template>
+                            <ng-template #output>
+                                {{ taxnonap.dpp | currency:'IDR':'symbol':'1.0-0':'id-ID' }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        {{ customer.balance | currency: 'USD' : 'symbol' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        {{ taxnonap.dpp * (11/12) | currency:'IDR':'symbol':'1.0-0':'id-ID' }}
                     </td>
-                    <td>
-                        {{ customer.balance | currency: 'USD' : 'symbol' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <p-inputNumber [(ngModel)]="taxnonap.ppn" mode="currency" currency="IDR" locale="id-ID" (ngModelChange)="calculateFromPPN(taxnonap)"></p-inputNumber>
+                            </ng-template>
+                            <ng-template #output>
+                                {{ taxnonap.ppn | currency:'IDR':'symbol':'1.0-0':'id-ID' }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        {{ customer.balance | currency: 'USD' : 'symbol' }}
+                    <td style="text-align: center; vertical-align: middle;">
+                        <input 
+                            type="checkbox"
+                            class="custom-control-input"
+                            [ngModel]="taxnonap.RELEASE === '1'"
+                            (ngModelChange)="taxnonap.RELEASE = $event ? '1' : '0'" [disabled]="!editing"
+                        />
                     </td>
                     <td>
                         <div class="flex flex-col md:flex-row gap-2">
-                            <p-button severity="success" icon="pi pi-pen-to-square"></p-button>
-                            <p-button severity="danger" icon="pi pi-trash"></p-button>
-                            <p-button severity="info" icon="pi pi-plus"></p-button>
+                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(taxnonap)" text rounded severity="success" [disabled]="taxnonap.RELEASE === '1' || editing"></button>
+                             <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-save" (click)="onRowEditSave(taxnonap)" text rounded severity="info"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(taxnonap, ri)" text rounded severity="danger"></button>
+                            <p-toast />
                         </div>
                     </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="8">No customers found.</td>
+                    <td colspan="8" style="text-align:center; vertical-align:middle;">No data available in table.</td>
                 </tr>
             </ng-template>
             <ng-template #loadingbody>
                 <tr>
-                    <td colspan="8">Loading customers data. Please wait.</td>
+                    <td colspan="8" style="text-align:center; vertical-align:middle;">Loading tax non a/p data. Please wait.</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -207,33 +224,33 @@
         <div class="flex flex-col md:flex-row gap-6 justify-between w-full">
             <div class="flex flex-col md:flex-row gap-2">
                 <label for="npwp" class="font-bold">NPWP:</label>
-                <input type="text" pInputText id="npwp">
+                <input type="text" pInputText id="npwp" [(ngModel)]="npwp" [readonly]="!editing" [class.bg-white]="editing" [class.bg-gray-100]="!editing">
             </div>
             <div class="flex flex-col md:flex-row gap-2">
                 <label for="total" class="font-bold">Total DPP + PPN:</label>
-                <input type="text" pInputText id="total">
+                <input type="text" pInputText id="total" [(ngModel)]="totalDppPpn" readonly>
             </div>
         </div>
 
         <div class="flex flex-col md:flex-row gap-6">
             <div class="flex flex-col md:flex-row gap-2 w-full">
-                <label for="kode" class="font-bold mr-3">Kode:</label>
-                <input type="text" pInputText id="kode">
+                <label for="kode" class="font-bold mr-2">Kode:</label>
+                <input type="text" pInputText id="kode" [(ngModel)]="kode" readonly>
             </div>
 
             <div class="flex flex-col md:flex-row gap-2 w-full">
                 <label for="usercreate" class="font-bold">User Create:</label>
-                <input type="text" pInputText id="usercreate" style="padding: 4px 8px; font-size: 12px;">
+                <input type="text" pInputText id="usercreate" style="padding: 4px 8px; font-size: 12px;" [(ngModel)]="userCreate" readonly>
             </div>
 
             <div class="flex flex-col md:flex-row gap-2 w-full">
                 <label for="usermodified" class="font-bold">User Modified:</label>
-                <input type="text" pInputText id="usermodified" style="padding: 4px 8px; font-size: 12px;">
+                <input type="text" pInputText id="usermodified" style="padding: 4px 8px; font-size: 12px;" [(ngModel)]="userModified" readonly>
             </div>
 
             <div class="flex flex-col md:flex-row gap-2 w-full">
-                <label for="statusap" class="font-bold mr-8">Status AP:</label>
-                <input type="text" pInputText id="statusap">
+                <label for="statusap" class="font-bold mr-15">Status AP:</label>
+                <input type="text" pInputText id="statusap" [(ngModel)]="statusAp" readonly>
             </div>
         </div>
 
@@ -243,23 +260,23 @@
                  <input 
                     type="text" 
                     pInputText 
-                    [value]="selectedDate | date:'MM-yyyy'" 
+                    [(ngModel)]="bulan"
                     readonly>
             </div>
 
             <div class="flex flex-col md:flex-row gap-2 w-full">
                 <label for="datecreate" class="font-bold">Date Create:</label>
-                <input type="text" pInputText id="datecreate" style="padding: 4px 8px; font-size: 12px;">
+                <input type="text" pInputText id="datecreate" style="padding: 4px 8px; font-size: 12px;" [(ngModel)]="dateCreate" readonly>
             </div>
 
             <div class="flex flex-col md:flex-row gap-2 w-full">
                 <label for="datemodified" class="font-bold">Date Modified:</label>
-                <input type="text" pInputText id="datemodified" style="padding: 4px 8px; font-size: 12px;">
+                <input type="text" pInputText id="datemodified" style="padding: 4px 8px; font-size: 12px;" [(ngModel)]="dateModified" readonly>
             </div>
 
             <div class="flex flex-col md:flex-row gap-2 w-full">
                 <label for="count" class="font-bold mr-14">Count:</label>
-                <input type="text" pInputText id="count">
+                <input type="text" pInputText id="count" [(ngModel)]="count" readonly>
             </div>
         </div>
     </div>

@@ -1,94 +1,115 @@
 <div class="card flex flex-col gap-6 w-full">
+    <div class="flex flex-col gap-2 w-full">
+        <label for="kategorikaryawan">Supplier</label>
+        <p-select
+            [options]="supplier"
+            [(ngModel)]="selectedSupplier"
+            optionLabel="supplier_name"
+            [showClear]="true"
+            placeholder="Pilih Supplier"
+            class="w-full"
+            [filter]="true"
+            filterBy="supplier_name,supplier_code"
+        >
+            <ng-template #selectedItem let-selectedSupplier>
+                <div class="flex items-center gap-2">
+                    <div>{{ selectedSupplier.supplier_code }} -</div>
+                    <div>{{ selectedSupplier.supplier_name }}</div>
+                </div>
+            </ng-template>
+            <ng-template let-supplier #item>
+                <div class="flex items-center gap-2">
+                    <div>{{ supplier.supplier_code }} -</div>
+                    <div>{{ supplier.supplier_name }}</div>
+                </div>
+            </ng-template>
+        </p-select>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
         <div class="flex flex-col gap-2 w-full">
-            <label for="kategorikaryawan">Supplier</label>
-            <p-select 
-                [options]="categoryOptions"
-                [(ngModel)]="selectedCategory"
-                optionLabel="label"
-                [showClear]="true"
-                placeholder="Pilih Supplier"
-                class="w-full"
-            >
-            </p-select>
+            <label for="tanggalMasa">Masa Pajak</label>
+            <p-datepicker 
+                [(ngModel)]="tanggalMasa" 
+                (ngModelChange)="onDateMasaChange($event)"
+                [showIcon]="true" 
+                dateFormat="dd-mm-yy"
+                inputId="tanggalMasa" />
         </div>
 
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="fullname">Masa Pajak</label>
-                <p-datepicker 
-                    [(ngModel)]="date2" 
-                    [showIcon]="true" 
-                    [dateFormat]="dateFormat"
-                    inputId="date_birth" 
-                    [showOnFocus]="false" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="date_birth">NPWP</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="fullname">Tanggal Penerimaan</label>
-                <p-datepicker 
-                    [(ngModel)]="date2" 
-                    [showIcon]="true" 
-                    [dateFormat]="dateFormat"
-                    inputId="date_birth" 
-                    [showOnFocus]="false" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="date_birth">Faktur</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="fullname">Tax Date</label>
-                <p-datepicker 
-                    [(ngModel)]="date2" 
-                    [showIcon]="true" 
-                    [dateFormat]="dateFormat"
-                    inputId="date_birth" 
-                    [showOnFocus]="false" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="date_birth">Tax Series</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="fullname">DPP</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="date_birth">DPP Nilai Lain</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="fullname">PPN</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="date_birth">Release</label>
-                <p-checkbox id="checkOption1" name="option" value="Chicago" />
-            </div>
-        </div>
-
-        <div class="mt-4 flex justify-end">
-            <button pButton size="small" label="Simpan" (click)="save()" class="mr-2" icon="pi pi-save"></button>
-            <button pButton size="small" label="Batal" severity="danger" (click)="close()" icon="pi pi-times"></button>
+        <div class="flex flex-col gap-2 w-full">
+            <label for="npwp">NPWP</label>
+            <input pInputText id="npwp" type="text" [(ngModel)]="npwp" maxlength="16" />
         </div>
     </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="datePenerimaan">Tanggal Penerimaan</label>
+            <p-datepicker 
+                [(ngModel)]="datePenerimaan"
+                (ngModelChange)="onDatePenerimaanChange($event)"
+                [showIcon]="true" 
+                dateFormat="dd-mm-yy"
+                inputId="datePenerimaan" />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="faktur_rmy">Faktur</label>
+            <input pInputText id="faktur_rmy" type="text" [(ngModel)]="faktur_rmy" maxlength="14" />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="dateTax">Tax Date</label>
+            <p-datepicker 
+                [(ngModel)]="dateTax"
+                (ngModelChange)="onDateTaxChange($event)" 
+                [showIcon]="true" 
+                dateFormat="dd-mm-yy"
+                inputId="dateTax" />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="tax_series">Tax Series</label>
+            <input pInputText id="tax_series" type="text" [(ngModel)]="tax_series" maxlength="20" (input)="formatTaxSeries($event)" />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="dpp">DPP</label>
+            <p-inputNumber pInputText id="dpp" type="number" [(ngModel)]="dpp" (onInput)="calculateFromDPP()" mode="currency" currency="IDR" locale="id-ID" />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="dppnilailain">DPP Nilai Lain</label>
+            <p-inputNumber pInputText id="dppnilailain" type="number" [(ngModel)]="dppNilaiLain" mode="currency" currency="IDR" locale="id-ID" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="ppn">PPN</label>
+            <p-inputNumber pInputText id="ppn" type="number" [(ngModel)]="ppn" (onInput)="calculateFromPPN()" mode="currency" currency="IDR" locale="id-ID" />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="release">Release</label>
+            <p-checkbox id="release" name="release" value="release" [(ngModel)]="release" binary="true" />
+        </div>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+        <button pButton size="small" label="Simpan" (click)="saveData()" severity="info" class="mr-2" icon="pi pi-save" [disabled]="loading"></button>
+        <button pButton size="small" label="Batal" severity="danger" (click)="close()" icon="pi pi-times"></button>
+        <p-toast />
+    </div>
+</div>
+
+<p-blockUI [blocked]="loading">
+    <div class="flex justify-content-center align-items-center">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</p-blockUI>

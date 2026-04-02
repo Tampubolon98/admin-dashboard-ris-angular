@@ -16,7 +16,7 @@ import { RippleModule } from 'primeng/ripple';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { TagModule } from 'primeng/tag';
-import { Customer, CustomerService, Representative } from '../service/customer.service';
+import { MasterEmployees, MasterEmployeeService, Representative } from '../service/master-employee.service';
 import { Product, ProductService } from '../service/product.service';
 import {ObjectUtils} from "primeng/utils";
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -25,7 +25,6 @@ import { AddEmployeeDialogComponent } from './modal/add-employee.component';
 import { UploadEmployeeDialogComponent } from './modal/upload-employee.component';
 import { TerminateEmployeeDialogComponent } from './modal/terminate-employee.component';
 import { DetailEmployeeDialogComponent } from './modal/detail-employee.component';
-
 
 interface expandedRows {
     [key: string]: boolean;
@@ -56,166 +55,10 @@ interface Country {
         ButtonModule,
         RatingModule,
         RippleModule,
-        IconFieldModule
+        IconFieldModule,
+        DynamicDialogModule 
     ],
-    template: ` <div class="card">
-            <div class="font-semibold text-xl mb-4">Data Karyawan</div>
-            <div class="flex justify-between items-center flex-column sm:flex-row">
-                <div class="mb-4">
-                    <p-button label="Tambah Data" severity="success" class="mr-2" icon="pi pi-plus" (onClick)="openAddDialog()"></p-button>
-
-                    <p-button label="Upload" severity="info" icon="pi pi-upload" (onClick)="openUploadDialog()"></p-button>
-                </div>
-
-                <div class="mb-4">
-                    <p-select [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select an store code" class="w-full md:w-56 mr-2">
-                        <ng-template #selectedItem let-selectedOption>
-                            <div class="flex items-center gap-2">
-                                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + (selectedCountry?.code?.toLowerCase() || '')" style="width: 18px" />
-                                <div>{{ selectedOption.name }}</div>
-                            </div>
-                        </ng-template>
-                        <ng-template let-country #item>
-                            <div class="flex items-center gap-2">
-                                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />
-                                <div>{{ country.name }}</div>
-                            </div>
-                        </ng-template>
-                    </p-select>
-
-                    <p-select 
-                        [options]="itemOptions"
-                        [(ngModel)]="selectedItem"
-                        optionLabel="label"
-                        placeholder="Select an item"
-                        class="w-full md:w-56 mr-2"
-                    >
-                    </p-select>
-
-                    <p-button severity="danger" icon="pi pi-search" [rounded]="true" />
-                </div>
-            </div>
-            
-            <p-table
-                #dt1
-                [value]="customers1"
-                dataKey="id"
-                [rows]="10"
-                [loading]="loading"
-                [rowHover]="true"
-                [showGridlines]="true"
-                [paginator]="true"
-                [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-                responsiveLayout="scroll"
-            >
-                <ng-template #caption>
-                    <div class="flex justify-between items-center flex-column sm:flex-row">
-                        <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
-                        <p-iconfield iconPosition="left" class="ml-auto">
-                            <p-inputicon>
-                                <i class="pi pi-search"></i>
-                            </p-inputicon>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
-                        </p-iconfield>
-                    </div>
-                </ng-template>
-                <ng-template #header>
-                    <tr>
-                        <th style="min-width: 12rem; background-color: red; color: white;">
-                            <div class="flex justify-between items-center">
-                                ID Karyawan
-                                <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width: 12rem; background-color: red; color: white;">
-                            <div class="flex justify-between items-center">
-                                Nama Karyawan
-                                <p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by country"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width: 14rem; background-color: red; color: white;">
-                            <div class="flex justify-between items-center">
-                                Tanggal Masuk
-                                <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                                    <ng-template #header>
-                                        <div class="px-3 pt-3 pb-0">
-                                            <span class="font-bold">Agent Picker</span>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #filter let-value let-filter="filterCallback">
-                                        <p-multiselect [ngModel]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" styleClass="w-full">
-                                            <ng-template let-option #item>
-                                                <div class="flex items-center gap-2 w-44">
-                                                    <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="32" />
-                                                    <span>{{ option.name }}</span>
-                                                </div>
-                                            </ng-template>
-                                        </p-multiselect>
-                                    </ng-template>
-                                </p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width: 10rem; background-color: red; color: white;">
-                            <div class="flex justify-between items-center">
-                                Kode Toko
-                                <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width: 10rem; background-color: red; color: white;">
-                            <div class="flex justify-between items-center">
-                                Supplier
-                                <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="min-width: 12rem; background-color: red; color: white;">
-                            <div class="flex justify-between items-center">
-                                Action
-                            </div>
-                        </th>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-customer>
-                    <tr>
-                        <td>
-                            {{ customer.name }}
-                        </td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + customer.country.code" width="30" />
-                                <span>{{ customer.country.name }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <img [alt]="customer.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
-                                <span class="image-text">{{ customer.representative.name }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            {{ customer.date | date: 'MM/dd/yyyy' }}
-                        </td>
-                        <td>
-                            {{ customer.balance | currency: 'USD' : 'symbol' }}
-                        </td>
-                        <td>
-                            <p-button label="Edit" severity="success" icon="pi pi-pen-to-square" size="small" (onClick)="openEditDialog()" class="mr-2"></p-button>
-                            <p-button label="View" severity="info" icon="pi pi-eye" size="small" (onClick)="openDetailDialog()" class="mr-2"></p-button>
-                            <p-button label="Terminate" severity="danger" icon="pi pi-trash" size="small" (onClick)="openTerminateDialog()"></p-button>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template #emptymessage>
-                    <tr>
-                        <td colspan="8">No customers found.</td>
-                    </tr>
-                </ng-template>
-                <ng-template #loadingbody>
-                    <tr>
-                        <td colspan="8">Loading customers data. Please wait.</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>`,
+    templateUrl: `views/index-master-employee.html`,
     styles: `
         .p-datatable-frozen-tbody {
             font-weight: bold;
@@ -225,18 +68,12 @@ interface Country {
             font-weight: bold;
         }
     `,
-    providers: [ConfirmationService, MessageService, CustomerService, ProductService, DialogService]
+    providers: [ConfirmationService, MessageService, MasterEmployeeService, ProductService, DialogService]
 })
 export class MasterEmployee implements OnInit {
-    customers1: Customer[] = [];
+    employees: MasterEmployees[] = [];
 
-    customers2: Customer[] = [];
-
-    customers3: Customer[] = [];
-
-    selectedCustomers1: Customer[] = [];
-
-    selectedCustomer: Customer = {};
+    selectedEmployees: MasterEmployees[] = [];
 
     representatives: Representative[] = [];
 
@@ -272,35 +109,37 @@ export class MasterEmployee implements OnInit {
     @ViewChild('filter') filter!: ElementRef;
 
     constructor(
-        private customerService: CustomerService,
         private productService: ProductService,
-        public dialogService: DialogService
+        public dialogService: DialogService,
+        private masterEmployeeService: MasterEmployeeService,
+        private messageService: MessageService
     ) {}
 
     ngOnInit() {
-        this.customerService.getCustomersLarge().then((customers) => {
-            this.customers1 = customers;
-            this.loading = false;
+        this.loadEmployees();
+        // this.customerService.getCustomersLarge().then((customers) => {
+        //     this.customers1 = customers;
+        //     this.loading = false;
 
-            // @ts-ignore
-            this.customers1.forEach((customer) => (customer.date = new Date(customer.date)));
-        });
-        this.customerService.getCustomersMedium().then((customers) => (this.customers2 = customers));
-        this.customerService.getCustomersLarge().then((customers) => (this.customers3 = customers));
-        this.productService.getProductsWithOrdersSmall().then((data) => (this.products = data));
+        //     // @ts-ignore
+        //     this.customers1.forEach((customer) => (customer.date = new Date(customer.date)));
+        // });
+        // this.customerService.getCustomersMedium().then((customers) => (this.customers2 = customers));
+        // this.customerService.getCustomersLarge().then((customers) => (this.customers3 = customers));
+        // this.productService.getProductsWithOrdersSmall().then((data) => (this.products = data));
 
-        this.representatives = [
-            { name: 'Amy Elsner', image: 'amyelsner.png' },
-            { name: 'Anna Fali', image: 'annafali.png' },
-            { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-            { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-            { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-            { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-            { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-            { name: 'Onyama Limba', image: 'onyamalimba.png' },
-            { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-            { name: 'XuXue Feng', image: 'xuxuefeng.png' }
-        ];
+        // this.representatives = [
+        //     { name: 'Amy Elsner', image: 'amyelsner.png' },
+        //     { name: 'Anna Fali', image: 'annafali.png' },
+        //     { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
+        //     { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
+        //     { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
+        //     { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
+        //     { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
+        //     { name: 'Onyama Limba', image: 'onyamalimba.png' },
+        //     { name: 'Stephen Shaw', image: 'stephenshaw.png' },
+        //     { name: 'XuXue Feng', image: 'xuxuefeng.png' }
+        // ];
 
         this.statuses = [
             { label: 'Unqualified', value: 'unqualified' },
@@ -323,34 +162,63 @@ export class MasterEmployee implements OnInit {
             { name: 'Spain', code: 'ES' },
             { name: 'United States', code: 'US' }
         ];
+
+        // this.masterEmployeeService.getMasterEmployee().subscribe(res => {
+        //     this.employee = res;
+        // });
     }
 
-    onSort() {
-        this.updateRowGroupMetaData();
-    }
-
-    updateRowGroupMetaData() {
-        this.rowGroupMetadata = {};
-
-        if (this.customers3) {
-            for (let i = 0; i < this.customers3.length; i++) {
-                const rowData = this.customers3[i];
-                const representativeName = rowData?.representative?.name || '';
-
-                if (i === 0) {
-                    this.rowGroupMetadata[representativeName] = { index: 0, size: 1 };
-                } else {
-                    const previousRowData = this.customers3[i - 1];
-                    const previousRowGroup = previousRowData?.representative?.name;
-                    if (representativeName === previousRowGroup) {
-                        this.rowGroupMetadata[representativeName].size++;
-                    } else {
-                        this.rowGroupMetadata[representativeName] = { index: i, size: 1 };
-                    }
-                }
+    loadEmployees() {
+        this.loading = true;
+        this.masterEmployeeService.getMasterEmployee().subscribe({
+            next: (res) => {
+                console.log('API Response:', res); // Debug log
+                this.employees = res;
+                this.loading = false;
+                this.messageService.add({ 
+                    severity: 'success', 
+                    summary: 'Success', 
+                    detail: 'Data loaded successfully' 
+                });
+            },
+            error: (error) => {
+                console.error('Error loading data:', error);
+                this.loading = false;
+                this.messageService.add({ 
+                    severity: 'error', 
+                    summary: 'Error', 
+                    detail: 'Failed to load data. Please check your API connection.' 
+                });
             }
-        }
+        });
     }
+
+    // onSort() {
+    //     this.updateRowGroupMetaData();
+    // }
+
+    // updateRowGroupMetaData() {
+    //     this.rowGroupMetadata = {};
+
+    //     if (this.customers3) {
+    //         for (let i = 0; i < this.customers3.length; i++) {
+    //             const rowData = this.customers3[i];
+    //             const representativeName = rowData?.representative?.name || '';
+
+    //             if (i === 0) {
+    //                 this.rowGroupMetadata[representativeName] = { index: 0, size: 1 };
+    //             } else {
+    //                 const previousRowData = this.customers3[i - 1];
+    //                 const previousRowGroup = previousRowData?.representative?.name;
+    //                 if (representativeName === previousRowGroup) {
+    //                     this.rowGroupMetadata[representativeName].size++;
+    //                 } else {
+    //                     this.rowGroupMetadata[representativeName] = { index: i, size: 1 };
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     expandAll() {
         if(ObjectUtils.isEmpty(this.expandedRows)) {
@@ -416,19 +284,19 @@ export class MasterEmployee implements OnInit {
         }
     }
 
-    calculateCustomerTotal(name: string) {
-        let total = 0;
+    // calculateCustomerTotal(name: string) {
+    //     let total = 0;
 
-        if (this.customers2) {
-            for (let customer of this.customers2) {
-                if (customer.representative?.name === name) {
-                    total++;
-                }
-            }
-        }
+    //     if (this.customers2) {
+    //         for (let customer of this.customers2) {
+    //             if (customer.representative?.name === name) {
+    //                 total++;
+    //             }
+    //         }
+    //     }
 
-        return total;
-    }
+    //     return total;
+    // }
 
     openAddDialog() {
         this.ref = this.dialogService.open(AddEmployeeDialogComponent, {
@@ -437,19 +305,19 @@ export class MasterEmployee implements OnInit {
             focusTrap: true
         });
 
-        this.ref.onClose.subscribe((newData) => {
-            if (newData) {
-            this.customers1.push({
-                id: newData.id,
-                name: newData.name,
-                country: { name: 'Unknown', code: 'XX' },
-                representative: { name: 'Unknown', image: 'default.png' },
-                date: new Date().toISOString(),
-                balance: 0,
-                status: 'new'
-            });
-            }
-        });
+        // this.ref.onClose.subscribe((newData) => {
+        //     if (newData) {
+        //     this.customers1.push({
+        //         id: newData.id,
+        //         name: newData.name,
+        //         country: { name: 'Unknown', code: 'XX' },
+        //         representative: { name: 'Unknown', image: 'default.png' },
+        //         date: new Date().toISOString(),
+        //         balance: 0,
+        //         status: 'new'
+        //     });
+        //     }
+        // });
     }
 
     openUploadDialog() {
@@ -461,26 +329,29 @@ export class MasterEmployee implements OnInit {
         });
     }
 
-    openEditDialog() {
+    openEditDialog(employee: MasterEmployees) {
         this.ref = this.dialogService.open(AddEmployeeDialogComponent, {
             header: 'Edit Data Karyawan',
             width: '50%',
+            data: {employee: employee}
         });
     }
 
-    openDetailDialog() {
+    openDetailDialog(employee: MasterEmployees) {
         this.ref = this.dialogService.open(DetailEmployeeDialogComponent, {
             header: 'Detail Data Karyawan',
             width: '70%',
             closable: true,
-            modal: true
+            modal: true,
+            data: {employee: employee}
         });
     }
 
-    openTerminateDialog() {
+    openTerminateDialog(employee: MasterEmployees) {
         this.ref = this.dialogService.open(TerminateEmployeeDialogComponent, {
             header: 'Terminate Data Karyawan',
-            width: '50%'
+            width: '50%',
+            data: {employee: employee}
         });
     }
 

@@ -1,92 +1,20 @@
-<div class="text-xl font-semibold bg-red-600 text-white p-4 rounded-t">
-   Input Pajak Keluaran
-</div>
 <div class="card">
-    <div class="flex flex-col gap-6 w-full">
-        <div class="flex flex-col gap-2 w-full">
-            <label for="unit">Operating Unit</label>
-            <p-select 
-                [options]="unitOptions"
-                [(ngModel)]="selectedUnit"
-                optionLabel="label"
-                [showClear]="true"
-                placeholder="Pilih Operating Unit"
-                inputId="unit"
-                class="w-100">
-            </p-select>
-        </div>
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-100">
-                <label for="storecode">Store Code</label>
-                <input type="text" pInputText id="storecode" [(ngModel)]="storecode" />
-            </div>
+    <div class="font-semibold text-xl mb-4">Terminate Karyawan</div>
     
-            <div class="flex flex-col gap-2">
-                <label for="invoicedate">Invoice Date</label>
-                <div class="flex flex-row gap-4 w-full items-center">
-                    <p-datepicker
-                        [(ngModel)]="startDate"
-                        (ngModelChange)="onStartDateChange($event)"
-                        class="w-95"
-                        [showIcon]="true"
-                        dateFormat="dd-mm-yy"
-                        inputId="startDate" />
-    
-                    <span class="font-bold">To</span>
-    
-                    <p-datepicker
-                        [(ngModel)]="endDate"
-                        (ngModelChange)="onEndDateChange($event)"
-                        class="w-98"
-                        [showIcon]="true"
-                        dateFormat="dd-mm-yy"
-                        inputId="endDate" />
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-100">
-                <label for="invoiceno">Invoice No</label>
-                <input type="text" pInputText id="invoiceno" [(ngModel)]="invoiceno" />
-            </div>
-    
-            <div class="flex flex-col gap-2 w-100">
-                <label for="supplier">Supplier</label>
-                <input type="text" pInputText id="supplierCode" [(ngModel)]="supplierCode" />
-            </div>
-    
-            <div class="flex flex-col gap-2 w-100">
-                <label for="transactioncode">Transaction Code</label>
-                <input type="text" pInputText id="trcode" [(ngModel)]="trcode" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2">
-                <button pButton label="Generate" severity="secondary" (click)="saveData()" icon="pi pi-sync" [disabled]="loading"></button>
-                <p-toast />
-            </div>
-        </div>
-    </div>
-</div>
-<p-blockUI [blocked]="loading">
-    <div class="flex justify-content-center align-items-center">
-        <p-progressSpinner></p-progressSpinner>
-    </div>
-</p-blockUI>
-
-<div class="card">
     <p-table
         #dt1
-        dataKey="id"
-        [value]="taxkeluaran"
+        [value]="employees"
+        dataKey="data.id_employee"
         [rows]="10"
         [loading]="loading"
         [rowHover]="true"
         [showGridlines]="true"
         [paginator]="true"
-        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        [globalFilterFields]="['data.nama', 'data.alamat', 'data.tanggal_lahir', 'data.kode_toko']"
         responsiveLayout="scroll"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10, 25, 50]"
     >
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
@@ -115,7 +43,7 @@
                 </th>
                 <th style="min-width: 14rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
-                        Tanggal Masuk
+                        Tanggal Keluar
                         <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
                             <ng-template #header>
                                 <div class="px-3 pt-3 pb-0">
@@ -149,33 +77,33 @@
                 </th>
             </tr>
         </ng-template>
-        <ng-template #body let-customer>
+        <ng-template #body let-terminate>
             <tr>
                 <td>
-                    
+                    {{ terminate?.id_employee || '-' }}
                 </td>
                 <td>
-                    
+                    {{ terminate?.nama || '-' }}
                 </td>
                 <td>
-                    
+                    {{ terminate?.tanggal_selesai || '-' }}
                 </td>
                 <td>
-                    
+                    {{ terminate?.kode_toko || '-' }}
                 </td>
                 <td>
-                    
+                    {{ terminate?.supplier || '-' }}
                 </td>
             </tr>
         </ng-template>
         <ng-template #emptymessage>
             <tr>
-                <td colspan="8" style="text-align:center; vertical-align:middle;">No data available in table.</td>
+                <td colspan="8">No customers found.</td>
             </tr>
         </ng-template>
         <ng-template #loadingbody>
             <tr>
-                <td colspan="8" style="text-align:center; vertical-align:middle;">Loading pajak keluaran data. Please wait.</td>
+                <td colspan="8">Loading customers data. Please wait.</td>
             </tr>
         </ng-template>
     </p-table>

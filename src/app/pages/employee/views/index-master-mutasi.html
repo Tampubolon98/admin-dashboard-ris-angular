@@ -1,92 +1,25 @@
-<div class="text-xl font-semibold bg-red-600 text-white p-4 rounded-t">
-   Input Pajak Keluaran
-</div>
 <div class="card">
-    <div class="flex flex-col gap-6 w-full">
-        <div class="flex flex-col gap-2 w-full">
-            <label for="unit">Operating Unit</label>
-            <p-select 
-                [options]="unitOptions"
-                [(ngModel)]="selectedUnit"
-                optionLabel="label"
-                [showClear]="true"
-                placeholder="Pilih Operating Unit"
-                inputId="unit"
-                class="w-100">
-            </p-select>
-        </div>
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-100">
-                <label for="storecode">Store Code</label>
-                <input type="text" pInputText id="storecode" [(ngModel)]="storecode" />
-            </div>
-    
-            <div class="flex flex-col gap-2">
-                <label for="invoicedate">Invoice Date</label>
-                <div class="flex flex-row gap-4 w-full items-center">
-                    <p-datepicker
-                        [(ngModel)]="startDate"
-                        (ngModelChange)="onStartDateChange($event)"
-                        class="w-95"
-                        [showIcon]="true"
-                        dateFormat="dd-mm-yy"
-                        inputId="startDate" />
-    
-                    <span class="font-bold">To</span>
-    
-                    <p-datepicker
-                        [(ngModel)]="endDate"
-                        (ngModelChange)="onEndDateChange($event)"
-                        class="w-98"
-                        [showIcon]="true"
-                        dateFormat="dd-mm-yy"
-                        inputId="endDate" />
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-100">
-                <label for="invoiceno">Invoice No</label>
-                <input type="text" pInputText id="invoiceno" [(ngModel)]="invoiceno" />
-            </div>
-    
-            <div class="flex flex-col gap-2 w-100">
-                <label for="supplier">Supplier</label>
-                <input type="text" pInputText id="supplierCode" [(ngModel)]="supplierCode" />
-            </div>
-    
-            <div class="flex flex-col gap-2 w-100">
-                <label for="transactioncode">Transaction Code</label>
-                <input type="text" pInputText id="trcode" [(ngModel)]="trcode" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2">
-                <button pButton label="Generate" severity="secondary" (click)="saveData()" icon="pi pi-sync" [disabled]="loading"></button>
-                <p-toast />
-            </div>
+    <div class="font-semibold text-xl mb-4">Mutasi Karyawan</div>
+    <div class="flex justify-between items-center flex-column sm:flex-row">
+        <div class="mb-4">
+            <p-button label="Tambah Data" severity="success" class="mr-2" icon="pi pi-plus" (onClick)="openAddDialog()"></p-button>
         </div>
     </div>
-</div>
-<p-blockUI [blocked]="loading">
-    <div class="flex justify-content-center align-items-center">
-        <p-progressSpinner></p-progressSpinner>
-    </div>
-</p-blockUI>
-
-<div class="card">
+    
     <p-table
         #dt1
-        dataKey="id"
-        [value]="taxkeluaran"
+        [value]="mutasi"
+        dataKey="data.id_employee"
         [rows]="10"
         [loading]="loading"
         [rowHover]="true"
         [showGridlines]="true"
         [paginator]="true"
-        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        [globalFilterFields]="['data.id_employee', 'data.nama', 'data.tanggal_masuk', 'data.tanggal_keluar']"
         responsiveLayout="scroll"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10, 25, 50]"
     >
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
@@ -135,47 +68,69 @@
                         </p-columnFilter>
                     </div>
                 </th>
-                <th style="min-width: 10rem; background-color: red; color: white;">
+                <th style="min-width: 12rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
-                        Kode Toko
-                        <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
+                        Kategori Karyawan
                     </div>
                 </th>
-                <th style="min-width: 10rem; background-color: red; color: white;">
+                <th style="min-width: 12rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Kode Toko
+                    </div>
+                </th>
+                <th style="min-width: 12rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
                         Supplier
-                        <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width: 12rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        No KK
+                    </div>
+                </th>
+                <th style="min-width: 12rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        No KTP
                     </div>
                 </th>
             </tr>
         </ng-template>
-        <ng-template #body let-customer>
+        <ng-template #body let-mutasi>
             <tr>
                 <td>
-                    
+                    {{ mutasi?.id_employee || '-' }}
                 </td>
                 <td>
-                    
+                    {{ mutasi?.nama || '-' }}
                 </td>
                 <td>
-                    
+                    {{ mutasi?.tanggal_masuk || '-' }}
                 </td>
                 <td>
-                    
+                    {{ mutasi?.kategori_karyawan || '-' }}
                 </td>
                 <td>
-                    
+                    {{ mutasi?.kode_toko || '-' }}
+                </td>
+                <td>
+                    {{ mutasi?.supplier || '-' }}
+                </td>
+                <td>
+                    {{ mutasi?.no_kk || '-' }}
+                </td>
+                <td>
+                    {{ mutasi?.no_ktp || '-' }}
                 </td>
             </tr>
         </ng-template>
         <ng-template #emptymessage>
             <tr>
-                <td colspan="8" style="text-align:center; vertical-align:middle;">No data available in table.</td>
+                <td colspan="8">No customers found.</td>
             </tr>
         </ng-template>
         <ng-template #loadingbody>
             <tr>
-                <td colspan="8" style="text-align:center; vertical-align:middle;">Loading pajak keluaran data. Please wait.</td>
+                <td colspan="8">Loading customers data. Please wait.</td>
             </tr>
         </ng-template>
     </p-table>
