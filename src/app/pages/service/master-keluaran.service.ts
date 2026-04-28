@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs";
@@ -25,8 +25,6 @@ export interface MasterKeluaran {
     process_tax_out: string;
     user_create: string;
     date_create: string;
-    user_modified: string;
-    date_modified: string;
     npwp: string;
     name: string;
     address: string;
@@ -59,7 +57,9 @@ export class MasterKeluaranService {
 
     constructor(private http: HttpClient) {}
 
-    createMasterKeluaran(createData: any):Observable<MasterKeluaran[]> {
-        return this.http.post<any>(`${this.apiUrl}/tax-keluaran/post`, createData)
+    createMasterKeluaran(startDate: string, endDate: string, invoiceno: string, suppliercode: string, trcode: string, storecode: string):Observable<MasterKeluaran[]> {
+        const params = new HttpParams().set('start_date', startDate).set('end_date', endDate).set('invoice_no', invoiceno).set('customer_id', suppliercode).set('tr_code', trcode).set('outlet_code', storecode);
+
+        return this.http.post<any>(`${this.apiUrl}/tax-keluaran/post`, null, {params});
     }
 }

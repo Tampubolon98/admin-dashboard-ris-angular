@@ -98,6 +98,13 @@ export class InputPajakKeluaran implements OnInit {
         });
     }
 
+    private formatDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    }
+
     saveData() {
         if (!this.storecode) {
             this.showError('Store Code Wajib Diisi');
@@ -119,41 +126,43 @@ export class InputPajakKeluaran implements OnInit {
             return;
         }
 
-        this.addtaxkeluaran.company_code = '1';
-        this.addtaxkeluaran.outlet_code = this.storecode;
-        this.addtaxkeluaran.customer_id = this.supplierCode;
-        this.addtaxkeluaran.invoice_no = this.invoiceno;
-        this.addtaxkeluaran.tr_code = this.trcode + '-' + this.selectedUnit;
-        this.addtaxkeluaran.user_create = "SYSTEM";
-        this.addtaxkeluaran.date_create = new Date().toISOString();
-        this.addtaxkeluaran.user_modified = "SYSTEM";
-        this.addtaxkeluaran.date_modified = new Date().toISOString();
-
-        this.masterKeluaranService.createMasterKeluaran(this.addtaxkeluaran)
-        .subscribe({
-            next: () => {
-                this.messageService.add({
-                    severity: "success",
-                    summary: 'Berhasil',
-                    detail: "Data berhasil ditambahkan"
-                });
-
-                setTimeout(() => {
-                    this.ref?.close(true);
-                }, 1200);
-            },
-            error: (err) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Gagal',
-                    detail: err?.message || "Data gagal ditambahkan"
-                });
-            }
-        });
+        if (this.startDate && this.endDate) {
+            const startDate = this.formatDate(this.startDate);
+            const endDate = this.formatDate(this.endDate);
+            const storecode = this.storecode;
+            const suppliercode = this.supplierCode;
+            const invoiceno = this.invoiceno;
+            const trcode = this.trcode;
+        
+            this.loading = true;
+            this.masterKeluaranService.createMasterKeluaran(startDate, endDate, invoiceno, suppliercode, trcode, storecode)
+            .subscribe({
+                next: () => {
+                    this.messageService.add({
+                        severity: "success",
+                        summary: 'Berhasil',
+                        detail: "Data berhasil ditambahkan"
+                    });
+    
+                    this.loading = false;
+                    setTimeout(() => {
+                        this.ref?.close(true);
+                    }, 1200);
+                },
+                error: (err) => {
+                    this.loading = false;
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Gagal',
+                        detail: err?.message || "Data gagal ditambahkan"
+                    });
+                }
+            });
+        }
     }
 
     ngOnInit(): void {
-        this.saveData();
+        
     }
 
     onGlobalFilter(table: Table, event: Event) {
