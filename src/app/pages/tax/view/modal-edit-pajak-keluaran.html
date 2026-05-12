@@ -1,0 +1,149 @@
+<div class="card flex flex-col gap-6 w-full">
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="customer_id">Customer ID</label>
+            <input pInputText id="customer_id" type="text" [(ngModel)]="customer_id" maxlength="20" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="npwp">NPWP</label>
+            <input pInputText id="npwp" type="text" [(ngModel)]="npwp" maxlength="20" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="invoice_no">Invoice No</label>
+            <input pInputText id="invoice_no" type="text" [(ngModel)]="invoice_no" maxlength="20" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="invoice_date">Invoice Date</label>
+            <p-datepicker 
+                    [(ngModel)]="invoice_date" 
+                    [showIcon]="true" 
+                    [dateFormat]="dateFormat"
+                    inputId="invoice_date" 
+                    [showOnFocus]="true" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="name">Customer Name</label>
+            <input pInputText id="name" type="text" [(ngModel)]="name" maxlength="20" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="address">Alamat</label>
+            <textarea pTextarea id="address" rows="4" style="border: 1px solid #E3E3E3; border-radius: 10px;" disabled></textarea>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="city">City</label>
+            <input pInputText id="city" type="text" [(ngModel)]="city" maxlength="20" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="postcode">Postcode</label>
+            <input pInputText id="postcode" type="text" [(ngModel)]="postcode" maxlength="20" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="pkp">PKP / Non PKP</label>
+            <input pInputText id="pkp" type="text" [(ngModel)]="pkp" maxlength="20" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="user_create">User Create</label>
+            <input pInputText id="user_create" type="text" [(ngModel)]="user_create" maxlength="20" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="user_modified">User Modified</label>
+            <input pInputText id="user_modified" type="text" [(ngModel)]="user_modified" maxlength="20" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="store">Store</label>
+            <input pInputText id="store" type="text" [(ngModel)]="store" maxlength="20" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="datecreate">Date Create</label>
+            <p-datepicker 
+                    [(ngModel)]="date_create" 
+                    [showIcon]="true" 
+                    [dateFormat]="dateFormat"
+                    inputId="date_create" 
+                    [showOnFocus]="true" disabled />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="date_modified">Date Modified</label>
+            <p-datepicker 
+                    [(ngModel)]="date_modified" 
+                    [showIcon]="true" 
+                    [dateFormat]="dateFormat"
+                    inputId="date_modified" 
+                    [showOnFocus]="true" disabled />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="inputdate">Input Date</label>
+            <p-datepicker 
+                    #dpInput
+                    [(ngModel)]="inputdate" 
+                    (ngModelChange)="onDateInputChange($event)"
+                    [showIcon]="true" 
+                    [showOnFocus]="false"
+                    dateFormat="dd-mm-yy"
+                    inputId="inputdate"
+                    (click)="dpInput.showOverlay()" />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="invoicetaxdate">Invoice Tax Date</label>
+            <p-datepicker 
+                    [(ngModel)]="invoicetaxdate"
+                    (ngModelChange)="onDateInvoiceChange($event)"
+                    [showIcon]="true" 
+                    dateFormat="dd-mm-yy"
+                    inputId="invoicetaxdate" />
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex flex-col gap-2 w-full">
+            <label for="tax_series_no">Tax Series No</label>
+            <input pInputText id="tax_series_no" type="text" [(ngModel)]="tax_series_no" maxlength="20" />
+        </div>
+
+        <div class="flex flex-col gap-2 w-full">
+            <label for="release">Release</label>
+            <p-checkbox id="release" name="release" value="release" [(ngModel)]="release" binary="true" />
+        </div>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+        <button pButton size="small" label="Simpan" severity="info" class="mr-2" icon="pi pi-save" [disabled]="loading"></button>
+        <button pButton size="small" label="Batal" severity="danger" (click)="close()" icon="pi pi-times"></button>
+        <p-toast />
+    </div>
+</div>
+
+<p-blockUI [blocked]="loading">
+    <div class="flex justify-content-center align-items-center">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</p-blockUI>

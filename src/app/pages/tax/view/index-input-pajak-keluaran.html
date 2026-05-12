@@ -3,18 +3,6 @@
 </div>
 <div class="card">
     <div class="flex flex-col gap-6 w-full">
-        <div class="flex flex-col gap-2 w-full">
-            <label for="unit">Operating Unit</label>
-            <p-select 
-                [options]="unitOptions"
-                [(ngModel)]="selectedUnit"
-                optionLabel="label"
-                [showClear]="true"
-                placeholder="Pilih Operating Unit"
-                inputId="unit"
-                class="w-100">
-            </p-select>
-        </div>
         <div class="flex flex-col md:flex-row gap-6">
             <div class="flex flex-col gap-2 w-100">
                 <label for="storecode">Store Code</label>
@@ -78,15 +66,18 @@
 <div class="card">
     <p-table
         #dt1
-        dataKey="id"
+        dataKey="invoice_no"
         [value]="taxkeluaran"
         [rows]="10"
         [loading]="loading"
         [rowHover]="true"
         [showGridlines]="true"
         [paginator]="true"
-        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        [globalFilterFields]="['invoice_date', 'invoice_no', 'agreement_no', 'customer_id', 'name', 'npwp', 'tax_series_no', 'dpp', 'dpp_nilai_lain', 'ppn', 'process_tax_out']"
         responsiveLayout="scroll"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10, 25, 50]"
     >
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
@@ -101,70 +92,116 @@
         </ng-template>
         <ng-template #header>
             <tr>
-                <th style="min-width: 12rem; background-color: red; color: white;">
+                <th pSortableColumn="invoice_date" style="min-width: 12rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
-                        ID Karyawan
-                        <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+                        Invoice Date
+                        <p-sortIcon field="invoice_date"></p-sortIcon>
                     </div>
                 </th>
-                <th style="min-width: 12rem; background-color: red; color: white;">
+                <th pSortableColumn="invoice_no" style="min-width: 12rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
-                        Nama Karyawan
-                        <p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by country"></p-columnFilter>
+                        Invoice No
+                        <p-sortIcon field="invoice_no"></p-sortIcon>
                     </div>
                 </th>
-                <th style="min-width: 14rem; background-color: red; color: white;">
+                <th pSortableColumn="agreement_no" style="min-width: 10rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
-                        Tanggal Masuk
-                        <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                            <ng-template #header>
-                                <div class="px-3 pt-3 pb-0">
-                                    <span class="font-bold">Agent Picker</span>
-                                </div>
-                            </ng-template>
-                            <ng-template #filter let-value let-filter="filterCallback">
-                                <p-multiselect [ngModel]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" styleClass="w-full">
-                                    <ng-template let-option #item>
-                                        <div class="flex items-center gap-2 w-44">
-                                            <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="32" />
-                                            <span>{{ option.name }}</span>
-                                        </div>
-                                    </ng-template>
-                                </p-multiselect>
-                            </ng-template>
-                        </p-columnFilter>
+                        Contract No
+                        <p-sortIcon field="agreement_no"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="customer_id" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Customer Code
+                        <p-sortIcon field="customer_id"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="name" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Name
+                        <p-sortIcon field="name"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="npwp" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        NPWP
+                        <p-sortIcon field="npwp"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="tax_series_no" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Tax Series No
+                        <p-sortIcon field="tax_series_no"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="dpp" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        DPP
+                        <p-sortIcon field="dpp"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="dpp_nilai_lain" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        DPP Nilai Lain
+                        <p-sortIcon field="dpp_nilai_lain"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="ppn" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        PPN
+                        <p-sortIcon field="ppn"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="process_tax_out" style="min-width: 10rem; background-color: red; color: white;">
+                    <div class="flex justify-between items-center">
+                        Process Tax
+                        <p-sortIcon field="process_tax_out"></p-sortIcon>
                     </div>
                 </th>
                 <th style="min-width: 10rem; background-color: red; color: white;">
                     <div class="flex justify-between items-center">
-                        Kode Toko
-                        <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 10rem; background-color: red; color: white;">
-                    <div class="flex justify-between items-center">
-                        Supplier
-                        <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+                        Action
                     </div>
                 </th>
             </tr>
         </ng-template>
-        <ng-template #body let-customer>
+        <ng-template #body let-taxkeluaran>
             <tr>
-                <td>
-                    
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.invoice_date | date: 'MM-dd-yyyy' }}  
                 </td>
-                <td>
-                    
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.invoice_no || '-' }}  
                 </td>
-                <td>
-                    
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.agreement_no || '-' }}  
                 </td>
-                <td>
-                    
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.customer_id || '-' }}  
                 </td>
-                <td>
-                    
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.name || '-' }}  
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.npwp || '-' }}  
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.tax_series_no || '-' }}  
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.dpp || '-' }}  
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.dpp_nilai_lain || '-' }}  
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.ppn || '-' }}  
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  {{ taxkeluaran?.process_tax_out || '-' }}
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  <p-button severity="success" icon="pi pi-pen-to-square" size="small" (onClick)="openEditDialog(taxkeluaran)"></p-button>
                 </td>
             </tr>
         </ng-template>

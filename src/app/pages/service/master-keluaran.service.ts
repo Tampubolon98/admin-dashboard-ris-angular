@@ -25,6 +25,8 @@ export interface MasterKeluaran {
     process_tax_out: string;
     user_create: string;
     date_create: string;
+    user_modified: string;
+    date_modified: string;
     npwp: string;
     name: string;
     address: string;
@@ -56,6 +58,18 @@ export class MasterKeluaranService {
     private apiUrl = 'http://localhost:8000';
 
     constructor(private http: HttpClient) {}
+
+    getMasterKeluaran(startDate: string, endDate: string, invoiceno: string, suppliercode: string, trcode: string):Observable<MasterKeluaran[]> {
+        const params = new HttpParams().set('start_date', startDate).set('end_date', endDate).set('invoice_no', invoiceno).set('customer_id', suppliercode).set('tr_code', trcode);
+
+        return this.http.get<ApiResponse>(`${this.apiUrl}/tax-keluaran/get`, {params}).pipe(map(response => {
+            if (Array.isArray(response.data)) {
+                return response.data;
+            } else {
+                return [];
+            }
+        }));
+    }
 
     createMasterKeluaran(startDate: string, endDate: string, invoiceno: string, suppliercode: string, trcode: string, storecode: string):Observable<MasterKeluaran[]> {
         const params = new HttpParams().set('start_date', startDate).set('end_date', endDate).set('invoice_no', invoiceno).set('customer_id', suppliercode).set('tr_code', trcode).set('outlet_code', storecode);

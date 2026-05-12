@@ -19,6 +19,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from "@angular/common";
 import { MasterKeluaran, MasterKeluaranService, Representative } from "../service/master-keluaran.service";
 import { take, takeLast } from "rxjs";
+import { EditPajakKeluaran } from "./modal/edit-pajak-keluaran.component";
 
 
 @Component({
@@ -105,24 +106,55 @@ export class InputPajakKeluaran implements OnInit {
         return `${year}-${month}-${day}`;
     }
 
+    loadTaxKeluaran() {
+        if (this.startDate && this.endDate) {
+            const startDate = this.formatDate(this.startDate);
+            const endDate = this.formatDate(this.endDate);
+            const suppliercode = this.supplierCode;
+            const invoiceno = this.invoiceno;
+            const trcode = this.trcode;
+
+            this.loading = true;
+            this.masterKeluaranService.getMasterKeluaran(startDate, endDate, invoiceno, suppliercode, trcode).subscribe({
+                next: (res) => {
+                    this.taxkeluaran = res;
+                    this.loading = false;
+                },
+                error: (error) => {
+                    this.loading = false;
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Failed to load data. Please check you API connection.'
+                    });
+                }
+            });
+        }
+    }
+
     saveData() {
-        if (!this.storecode) {
+        if (!this.storecode || this.storecode == '-') {
             this.showError('Store Code Wajib Diisi');
             return;
         }
 
-        if (!this.invoiceno) {
+        if (!this.invoiceno || this.invoiceno == '-') {
             this.showError('Invoice No Wajib Diisi');
             return;
         }
 
-        if (!this.supplierCode) {
+        if (!this.supplierCode || this.supplierCode == '-') {
             this.showError('Supplier Code Wajib Diisi');
             return;
         }
 
-        if (!this.trcode) {
+        if (!this.trcode || this.trcode == '-') {
             this.showError('Transaction Code Wajib Diisi');
+            return;
+        }
+
+        if (!this.startDate && !this.endDate) {
+            this.showError('Start Date dan End Date tidak boleh kosong');
             return;
         }
 
@@ -145,6 +177,7 @@ export class InputPajakKeluaran implements OnInit {
                     });
     
                     this.loading = false;
+                    this.loadTaxKeluaran();
                     setTimeout(() => {
                         this.ref?.close(true);
                     }, 1200);
@@ -154,7 +187,7 @@ export class InputPajakKeluaran implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Gagal',
-                        detail: err?.message || "Data gagal ditambahkan"
+                        detail: err?.error?.detail || "Data gagal ditambahkan"
                     });
                 }
             });
@@ -162,7 +195,6 @@ export class InputPajakKeluaran implements OnInit {
     }
 
     ngOnInit(): void {
-        
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -176,5 +208,13 @@ export class InputPajakKeluaran implements OnInit {
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
+    }
+
+    openEditDialog(taxkeluaran: MasterKeluaran) {
+        this.ref = this.dialogService.open(EditPajakKeluaran, {
+            header: "Edit Pajak Keluaran",
+            width: "50%",
+            data: {taxkeluaran:taxkeluaran}
+        });
     }
 }
