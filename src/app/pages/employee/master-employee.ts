@@ -25,6 +25,7 @@ import { AddEmployeeDialogComponent } from './modal/add-employee.component';
 import { UploadEmployeeDialogComponent } from './modal/upload-employee.component';
 import { TerminateEmployeeDialogComponent } from './modal/terminate-employee.component';
 import { DetailEmployeeDialogComponent } from './modal/detail-employee.component';
+import { EditMasterEmployee } from './modal/edit-employee.component';
 
 interface expandedRows {
     [key: string]: boolean;
@@ -301,23 +302,8 @@ export class MasterEmployee implements OnInit {
     openAddDialog() {
         this.ref = this.dialogService.open(AddEmployeeDialogComponent, {
             header: 'Tambah Data Karyawan',
-            width: '50%',
-            focusTrap: true
+            width: '50%'
         });
-
-        // this.ref.onClose.subscribe((newData) => {
-        //     if (newData) {
-        //     this.customers1.push({
-        //         id: newData.id,
-        //         name: newData.name,
-        //         country: { name: 'Unknown', code: 'XX' },
-        //         representative: { name: 'Unknown', image: 'default.png' },
-        //         date: new Date().toISOString(),
-        //         balance: 0,
-        //         status: 'new'
-        //     });
-        //     }
-        // });
     }
 
     openUploadDialog() {
@@ -330,7 +316,7 @@ export class MasterEmployee implements OnInit {
     }
 
     openEditDialog(employee: MasterEmployees) {
-        this.ref = this.dialogService.open(AddEmployeeDialogComponent, {
+        this.ref = this.dialogService.open(EditMasterEmployee, {
             header: 'Edit Data Karyawan',
             width: '50%',
             data: {employee: employee}

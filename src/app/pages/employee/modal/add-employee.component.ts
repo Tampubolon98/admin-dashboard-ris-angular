@@ -8,213 +8,67 @@ import { SelectModule } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Country } from '../../service/customer.service';
 import { TextareaModule } from 'primeng/textarea';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { MasterEmployeeService } from '@/pages/service/master-employee.service';
+import { ToastModule } from 'primeng/toast';
+import { BlockUIModule } from 'primeng/blockui';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-add-employee-dialog',
   standalone: true,
-  imports: [FormsModule, InputTextModule, ButtonModule, DatePickerModule, SelectModule, MultiSelectModule, TextareaModule],
-  template: `
-    <div class="card flex flex-col gap-6 w-full">
-        <div class="flex flex-col gap-2 w-full">
-            <label for="uploadimage">Upload Foto</label>
-            <input pInputText id="uploadimage" type="text" class="form-control" />
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="fullname">Nama Karyawan</label>
-                <input pInputText id="fullname" type="text" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="date_birth">Tanggal Lahir</label>
-                <p-datepicker 
-                    [(ngModel)]="date2" 
-                    [showIcon]="true" 
-                    [dateFormat]="dateFormat"
-                    inputId="date_birth" 
-                    [showOnFocus]="true" />
-            </div>
-        </div>
-
-        <div class="flex flex-col gap-2 w-full">
-            <label for="kategorikaryawan">Kategori Karyawan</label>
-            <p-select 
-                [options]="categoryOptions"
-                [(ngModel)]="selectedCategory"
-                optionLabel="label"
-                [showClear]="true"
-                placeholder="Pilih Kategori Karyawan"
-                class="w-full"
-            >
-            </p-select>
-        </div>
-
-        <div class="flex flex-col gap-2 w-full">
-            <label for="alamat">Alamat</label>
-            <textarea pTextarea id="alamat" rows="4" style="border: 1px solid #E3E3E3; border-radius: 10px;"></textarea>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="kodetoko">Kode Toko</label>
-                <p-select 
-                    [options]="countries"
-                    [(ngModel)]="selectedCountry"
-                    optionLabel="name"
-                    [filter]="true"
-                    filterBy="name"
-                    [showClear]="true"
-                    placeholder="Select a store code"
-                    class="w-full md:w-95"
-                >
-                    <ng-template #selectedItem let-selectedOption>
-                        <div class="flex items-center gap-2">
-                            <img 
-                                src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                                [class]="'flag flag-' + (selectedCountry?.code?.toLowerCase() || '')"
-                                style="width: 18px"
-                            />
-                            <div>{{ selectedOption.name }}</div>
-                        </div>
-                    </ng-template>
-
-                    <ng-template let-country #item>
-                        <div class="flex items-center gap-2">
-                            <img 
-                                src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                                [class]="'flag flag-' + country.code.toLowerCase()"
-                                style="width: 18px"
-                            />
-                            <div>{{ country.name }}</div>
-                        </div>
-                    </ng-template>
-                </p-select>
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="birthday">Perusahaan</label>
-                <p-select 
-                    [options]="countries"
-                    [(ngModel)]="selectedCountry"
-                    optionLabel="name"
-                    [filter]="true"
-                    filterBy="name"
-                    [showClear]="true"
-                    placeholder="Select a store code"
-                    class="w-full md:w-95"
-                >
-                    <ng-template #selectedItem let-selectedOption>
-                        <div class="flex items-center gap-2">
-                            <img 
-                                src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                                [class]="'flag flag-' + (selectedCountry?.code?.toLowerCase() || '')"
-                                style="width: 18px"
-                            />
-                            <div>{{ selectedOption.name }}</div>
-                        </div>
-                    </ng-template>
-
-                    <ng-template let-country #item>
-                        <div class="flex items-center gap-2">
-                            <img 
-                                src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                                [class]="'flag flag-' + country.code.toLowerCase()"
-                                style="width: 18px"
-                            />
-                            <div>{{ country.name }}</div>
-                        </div>
-                    </ng-template>
-                </p-select>
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="nohandphone">No Handphone</label>
-                <input pInputText id="nohandphone" type="text" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="joindate">Tanggal Masuk</label>
-                <p-datepicker 
-                    [(ngModel)]="date3" 
-                    [showIcon]="true" 
-                    [dateFormat]="dateFormat"
-                    inputId="joindate" 
-                    [showOnFocus]="true" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="nik">Nomor Kartu Keluarga</label>
-                <input pInputText id="nik" type="text" />
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="noktp">Nomor KTP</label>
-                <input pInputText id="nik" type="text" />
-            </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6">
-            <div class="flex flex-col gap-2 w-full">
-                <label for="jeniskelamin">Jenis Kelamin</label>
-                <p-select 
-                    [options]="genderOptions"
-                    [(ngModel)]="selectedGender"
-                    optionLabel="label"
-                    [showClear]="true"
-                    placeholder="Pilih Jenis Kelamin"
-                    class="w-full"
-                >
-                </p-select>
-            </div>
-
-            <div class="flex flex-col gap-2 w-full">
-                <label for="status">Status</label>
-                <p-select 
-                    [options]="statusOptions"
-                    [(ngModel)]="selectedStatus"
-                    optionLabel="label"
-                    [showClear]="true"
-                    placeholder="Pilih Status"
-                    class="w-full"
-                >
-                </p-select>
-            </div>
-        </div>
-
-        <div class="mt-4 flex justify-end">
-            <button pButton size="small" label="Simpan" (click)="save()" class="mr-2" icon="pi pi-save"></button>
-            <button pButton size="small" label="Batal" severity="danger" (click)="close()" icon="pi pi-times"></button>
-        </div>
-    </div>
-  `
+  imports: [FormsModule, InputTextModule, ButtonModule, DatePickerModule, SelectModule, MultiSelectModule, TextareaModule, ToastModule, BlockUIModule, ProgressSpinnerModule],
+  templateUrl: '../views/modal-add-master-employee.html',
+  providers: [ConfirmationService, MessageService, MasterEmployeeService]
 })
 export class AddEmployeeDialogComponent {
-  constructor(public ref: DynamicDialogRef) {}
-
   employee: any = {};
-
-  date1: Date | undefined;
-
-  date2: Date | undefined;
-
-  date3: Date | undefined;
-
+  fullname: string = '';
+  date_birth: Date | null = new Date;
+  alamat: string = '';
+  selectedStoreCode: string | undefined;
+  selectedCompany: string | undefined;
+  nohandphone: string = '';
+  joinDate: Date | null = new Date;
+  nik: string = '';
+  noktp: string = '';
+  uploadimage: string = '';
+  selectedGender: any;
+  selectedStatus: any;
+  selectedCategory: any;
   dateFormat: string = 'dd-mm-yy';
+  loading: boolean = false;
 
   countries: Country[] = [];
 
   selectedCountry: Country | undefined;
 
+  constructor(
+    private masterEmployeeService: MasterEmployeeService,
+    public ref: DynamicDialogRef,
+    private messageService: MessageService
+  ) {}
+
+  onDateBirthChange(date: Date | null) {
+    if(!date) {
+        this.date_birth = null;
+        return;
+    }
+    this.date_birth = date;
+  }
+
+  onJoinDateChange(date: Date | null) {
+    if(!date) {
+        this.joinDate = null;
+        return;
+    }
+    this.joinDate = date;
+  }
+
   genderOptions = [
     { label: 'Laki-laki', value: 'L' },
     { label: 'Perempuan', value: 'P' }
   ];
-  selectedGender: any;
 
   statusOptions = [
     {label: 'Belum Menikah', value: 'BM'},
@@ -222,16 +76,70 @@ export class AddEmployeeDialogComponent {
     {label: 'Janda', value: 'J'},
     {label: 'Duda', value: 'D'}
   ]
-  selectedStatus: any;
 
   categoryOptions = [
     {label: 'PKL', value: 'PKL'},
     {label: 'SPG', value: 'SPG'}
   ]
-  selectedCategory: any;
 
-  save() {
-    this.ref.close(this.employee);
+  showError(message: string) {
+    this.messageService.add({
+        severity: 'warn',
+        summary: 'Input Kosong',
+        detail: message
+    });
+  }
+
+  saveData() {
+    if(!this.uploadimage) {
+        this.showError('Silahkan Upload Image');
+        return;
+    }
+
+    if (!this.alamat) {
+        this.showError('Alamat Wajib Diisi');
+        return;
+    }
+
+    if (!this.fullname) {
+        this.showError('Alamat Wajib Diisi');
+        return;
+    }
+
+    if (!this.noktp) {
+        this.showError('No KTP Wajib Diisi');
+        return;
+    }
+
+    if (!this.nik) {
+        this.showError('NIK Wajib Diisi');
+        return;
+    }
+
+    if (!this.nohandphone) {
+        this.showError('No Handphone Wajib Diisi');
+        return;
+    }
+
+    if (!this.selectedCategory) {
+        this.showError('Silahkan Pilih Kategori Karyawan');
+        return;
+    }
+
+    if (!this.selectedCompany) {
+        this.showError('Silahkan Pilih Perusahaan');
+        return;
+    }
+
+    if (!this.selectedGender) {
+        this.showError('Silahkan Pilih Jenis Kelamin');
+        return;
+    }
+
+    if (!this.selectedStatus) {
+        this.showError('Silahkan Pilih Status Karyawan');
+        return;
+    }
   }
 
   close() {
@@ -239,8 +147,7 @@ export class AddEmployeeDialogComponent {
   }
 
   ngOnInit() {
-    this.date2 = new Date();
-    this.date3 = new Date();
+    this.saveData();
 
     this.countries = [
         { name: 'Australia', code: 'AU' },
