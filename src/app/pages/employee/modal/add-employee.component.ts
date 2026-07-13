@@ -13,11 +13,12 @@ import { MasterEmployeeService } from '@/pages/service/master-employee.service';
 import { ToastModule } from 'primeng/toast';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-employee-dialog',
   standalone: true,
-  imports: [FormsModule, InputTextModule, ButtonModule, DatePickerModule, SelectModule, MultiSelectModule, TextareaModule, ToastModule, BlockUIModule, ProgressSpinnerModule],
+  imports: [FormsModule, InputTextModule, ButtonModule, DatePickerModule, SelectModule, MultiSelectModule, TextareaModule, ToastModule, BlockUIModule, ProgressSpinnerModule, CommonModule],
   templateUrl: '../views/modal-add-master-employee.html',
   providers: [ConfirmationService, MessageService, MasterEmployeeService]
 })
@@ -38,6 +39,8 @@ export class AddEmployeeDialogComponent {
   selectedCategory: any;
   dateFormat: string = 'dd-mm-yy';
   loading: boolean = false;
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
 
   countries: Country[] = [];
 
@@ -90,6 +93,23 @@ export class AddEmployeeDialogComponent {
     });
   }
 
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    console.log('adaaaa', file);
+
+    if (file) {
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+  
   saveData() {
     if(!this.uploadimage) {
         this.showError('Silahkan Upload Image');

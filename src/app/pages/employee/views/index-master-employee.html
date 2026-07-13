@@ -22,24 +22,24 @@
                 [options]="itemOptions"
                 [(ngModel)]="selectedItem"
                 optionLabel="label"
-                placeholder="Select type"
+                placeholder="Select at item"
                 class="w-full md:w-56 mr-2">
             </p-select>
 
-            <p-button severity="danger" icon="pi pi-search" [rounded]="true" />
+            <p-button severity="danger" icon="pi pi-search" [rounded]="true" (onClick)="searchData()" />
         </div>
     </div>
     
     <p-table
         #dt1
         [value]="employees"
-        dataKey="data.id_employee"
+        dataKey="id_employee"
         [rows]="10"
         [loading]="loading"
         [rowHover]="true"
         [showGridlines]="true"
         [paginator]="true"
-        [globalFilterFields]="['data.nama', 'data.kode_toko', 'data.supplier', 'data.status']"
+        [globalFilterFields]="['nama', 'kode_toko', 'supplier', 'status', 'id_employee']"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [rowsPerPageOptions]="[10, 25, 50]"
@@ -119,13 +119,13 @@
         
         <ng-template #emptymessage>
             <tr>
-                <td colspan="6">No employee data found.</td>
+                <td colspan="6" style="text-align: center;">Data not found.</td>
             </tr>
         </ng-template>
         
         <ng-template #loadingbody>
             <tr>
-                <td colspan="6">Loading employee data. Please wait.</td>
+                <td colspan="6">Loading data. Please wait.</td>
             </tr>
         </ng-template>
     </p-table>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,6 +17,7 @@ export interface MasterEmployees {
     no_kk?: string;
     no_ktp?: string;
     jenis_kelamin?: string;
+    image_employee?: string;
     status?: string;
     alamat_rumah?: string;
     keterangan?: string;
@@ -59,6 +60,18 @@ export class MasterEmployeeService {
         }
       })
     );
+  }
+
+  getSearchEmployee(kategori_karyawan: string): Observable<MasterEmployees[]> {
+    const params = new HttpParams().set('kategori_karyawan', kategori_karyawan);
+
+    return this.http.get<ApiResponse>(`${this.apiUrl}/master-employee/search-employee`, {params}).pipe(map(response => {
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        return [];
+      }
+    }));
   }
 
   getEmployeeSPG(): Observable<MasterEmployees[]> {

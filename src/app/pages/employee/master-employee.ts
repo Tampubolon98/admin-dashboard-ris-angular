@@ -24,8 +24,8 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { AddEmployeeDialogComponent } from './modal/add-employee.component';
 import { UploadEmployeeDialogComponent } from './modal/upload-employee.component';
 import { TerminateEmployeeDialogComponent } from './modal/terminate-employee.component';
-import { DetailEmployeeDialogComponent } from './modal/detail-employee.component';
-import { EditMasterEmployee } from './modal/edit-employee.component';
+import { DetailMasterEmployeeComponent } from './modal/detail-employee.component';
+import { EditMasterEmployeeComponent } from './modal/edit-employee.component';
 
 interface expandedRows {
     [key: string]: boolean;
@@ -73,31 +73,18 @@ interface Country {
 })
 export class MasterEmployee implements OnInit {
     employees: MasterEmployees[] = [];
-
     selectedEmployees: MasterEmployees[] = [];
-
     representatives: Representative[] = [];
-
     statuses: any[] = [];
-
     products: Product[] = [];
-
     rowGroupMetadata: any;
-
     expandedRows: expandedRows = {};
-
     activityValues: number[] = [0, 100];
-
     isExpanded: boolean = false;
-
     balanceFrozen: boolean = false;
-
     loading: boolean = true;
-
     countries: Country[] = [];
-
     ref: DynamicDialogRef | undefined;
-
     selectedCountry: Country | undefined;
 
     itemOptions = [
@@ -106,6 +93,14 @@ export class MasterEmployee implements OnInit {
         {label: 'SPG', value: 'SPG'}
     ];
     selectedItem: any;
+
+    searchData() {
+        const kategori_karyawan = this.selectedItem?.value;
+
+        this.masterEmployeeService.getSearchEmployee(kategori_karyawan).subscribe(res => {
+            this.employees = res;
+        });
+    }
 
     @ViewChild('filter') filter!: ElementRef;
 
@@ -173,7 +168,6 @@ export class MasterEmployee implements OnInit {
         this.loading = true;
         this.masterEmployeeService.getMasterEmployee().subscribe({
             next: (res) => {
-                console.log('API Response:', res); // Debug log
                 this.employees = res;
                 this.loading = false;
                 this.messageService.add({ 
@@ -316,7 +310,7 @@ export class MasterEmployee implements OnInit {
     }
 
     openEditDialog(employee: MasterEmployees) {
-        this.ref = this.dialogService.open(EditMasterEmployee, {
+        this.ref = this.dialogService.open(EditMasterEmployeeComponent, {
             header: 'Edit Data Karyawan',
             width: '50%',
             data: {employee: employee}
@@ -324,7 +318,7 @@ export class MasterEmployee implements OnInit {
     }
 
     openDetailDialog(employee: MasterEmployees) {
-        this.ref = this.dialogService.open(DetailEmployeeDialogComponent, {
+        this.ref = this.dialogService.open(DetailMasterEmployeeComponent, {
             header: 'Detail Data Karyawan',
             width: '70%',
             closable: true,
