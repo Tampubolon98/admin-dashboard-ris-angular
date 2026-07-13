@@ -24,7 +24,7 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { AddEmployeeDialogComponent } from './modal/add-employee.component';
 import { UploadEmployeeDialogComponent } from './modal/upload-employee.component';
 import { TerminateEmployeeDialogComponent } from './modal/terminate-employee.component';
-import { DetailEmployeeDialogComponent } from './modal/detail-employee.component';
+// import { DetailEmployeeDialogComponent } from './modal/detail-employee.component';
 
 
 interface expandedRows {
@@ -280,14 +280,14 @@ export class TerminateEmployee implements OnInit {
         });
     }
 
-    openDetailDialog() {
-        this.ref = this.dialogService.open(DetailEmployeeDialogComponent, {
-            header: 'Detail Data Karyawan',
-            width: '70%',
-            closable: true,
-            modal: true
-        });
-    }
+    // openDetailDialog() {
+    //     this.ref = this.dialogService.open(DetailEmployeeDialogComponent, {
+    //         header: 'Detail Data Karyawan',
+    //         width: '70%',
+    //         closable: true,
+    //         modal: true
+    //     });
+    // }
 
     openTerminateDialog() {
         this.ref = this.dialogService.open(TerminateEmployeeDialogComponent, {

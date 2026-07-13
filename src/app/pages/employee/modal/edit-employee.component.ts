@@ -43,7 +43,7 @@ import { DynamicDialogConfig } from "primeng/dynamicdialog";
     providers: [ConfirmationService, MessageService, DialogService, MasterKeluaranService]
 })
 
-export class EditMasterEmployee {
+export class EditMasterEmployeeComponent {
     constructor(
         public ref: DynamicDialogRef,
         public config: DynamicDialogConfig

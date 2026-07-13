@@ -1,13 +1,8 @@
 <div class="card flex flex-col gap-6 w-full">
-        <div class="flex flex-col gap-2 w-full">
-            <label for="uploadimage">Upload Foto</label>
-            <input pInputText id="uploadimage" type="file" class="form-control" [(ngModel)]="uploadimage" autofocus />
-        </div>
-
         <div class="flex flex-col md:flex-row gap-6">
             <div class="flex flex-col gap-2 w-full">
                 <label for="fullname">Nama Karyawan</label>
-                <input pInputText id="fullname" type="text" [(ngModel)]="fullname" />
+                <input pInputText id="fullname" type="text" [(ngModel)]="fullname" autofocus />
             </div>
 
             <div class="flex flex-col gap-2 w-full">

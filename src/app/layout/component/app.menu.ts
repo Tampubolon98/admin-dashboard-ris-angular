@@ -21,54 +21,93 @@ export class AppMenu {
     ngOnInit() {
         this.model = [
             {
-                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
+                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-gauge', routerLink: ['/'] }]
             },
             {
                 items: [
                     {
                         label: 'Human Resource',
-                        icon: 'pi pi-fw pi-briefcase',
+                        icon: 'pi pi-fw pi-gauge',
                         items: [
                             {
                                 label: 'Master Employee',
-                                icon: 'pi pi-fw pi-users',
+                                icon: 'pi pi-fw pi-circle',
                                 items: [
-                                    { label: 'Data Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/data-karyawan'] },
-                                    { label: 'Master Brand', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/master-brand'] },
-                                    { label: 'Mutasi Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/mutasi-employee'] },
-                                    { label: 'Rehire Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/rehire-employee'] },
-                                    { label: 'Terminate Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/terminate-employee'] },
-                                    { 
-                                        label: 'Report Master Karyawan', 
-                                        icon: 'pi pi-fw pi-bookmark',
+                                    {
+                                        label: 'Data Karyawan',
+                                        icon: 'pi pi-fw pi-users',
                                         items: [
-                                            { label: 'Report CV', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/report-cv'] },
-                                            { label: 'Report Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: '/masteremployee/report-employee' },
-                                            { label: 'Report Sales', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/report-sales-id'] }
+                                            { label: 'Data Karyawan', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/data-karyawan'] },
+                                            { label: 'Master Brand', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/master-brand'] },
+                                            { label: 'Mutasi Karyawan', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/mutasi-employee'] },
+                                            { label: 'Rehire Karyawan', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/rehire-employee'] },
+                                            { label: 'Terminate Karyawan', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/terminate-employee'] },
+                                            { 
+                                                label: 'Report Master Karyawan', 
+                                                icon: 'pi pi-fw pi-star-half-fill',
+                                                items: [
+                                                    { label: 'Report CV', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/report-cv'] },
+                                                    { label: 'Report Karyawan', icon: 'pi pi-fw pi-star-half', routerLink: '/masteremployee/report-employee' },
+                                                    { label: 'Report Sales', icon: 'pi pi-fw pi-star-half', routerLink: ['/masteremployee/report-sales-id'] }
+                                                ]
+                                            },
                                         ]
-                                    },
+                                    }
                                 ]
                             }
+                            // {
+                            //     label: 'Master Employee',
+                            //     icon: 'pi pi-fw pi-circle',
+                            //     items: [
+                            //         { label: 'Data Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/data-karyawan'] },
+                            //         { label: 'Master Brand', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/master-brand'] },
+                            //         { label: 'Mutasi Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/mutasi-employee'] },
+                            //         { label: 'Rehire Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/rehire-employee'] },
+                            //         { label: 'Terminate Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/terminate-employee'] },
+                            //         { 
+                            //             label: 'Report Master Karyawan', 
+                            //             icon: 'pi pi-fw pi-bookmark',
+                            //             items: [
+                            //                 { label: 'Report CV', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/report-cv'] },
+                            //                 { label: 'Report Karyawan', icon: 'pi pi-fw pi-bookmark', routerLink: '/masteremployee/report-employee' },
+                            //                 { label: 'Report Sales', icon: 'pi pi-fw pi-bookmark', routerLink: ['/masteremployee/report-sales-id'] }
+                            //             ]
+                            //         },
+                            //     ]
+                            // }
                         ]
                     }
                 ]
             },
             {
                 items: [
-                    { label: 'Tax', icon: 'pi pi-fw pi-book', items: [
-                        { label: 'Pajak Keluaran', icon: 'pi pi-fw pi-file', items: [
-                            { label: 'Input Pajak Keluaran', icon: 'pi pi-fw pi-bookmark', routerLink: '/tax/input-pajak-keluaran' }
-                        ]},
-                        { label: 'Pajak Masukan', icon: 'pi pi-fw pi-file', items: [
-                            { label: 'Bahan', icon: 'pi pi-fw pi-bookmark', routerLink: '/tax/pajak-masukan-bahan' },
-                            { label: 'Non A/P', icon: 'pi pi-fw pi-bookmark', routerLink: '/tax/pajak-masukan-nonap' }
-                        ]}
+                    { label: 'Tax', icon: 'pi pi-fw pi-gauge', items: [
+                        { 
+                            label: 'Tax', 
+                            icon: 'pi pi-fw pi-circle', 
+                            items: [
+                                { label: 'Pajak Keluaran', icon: 'pi pi-fw pi-calculator', items: [
+                                    { label: 'Input Pajak Keluaran', icon: 'pi pi-fw pi-star-half', routerLink: '/tax/input-pajak-keluaran' }
+                                ]},
+                                { label: 'Pajak Masukan', icon: 'pi pi-fw pi-calculator', items: [
+                                    { label: 'Bahan', icon: 'pi pi-fw pi-star-half', routerLink: '/tax/pajak-masukan-bahan' },
+                                    { label: 'Non A/P', icon: 'pi pi-fw pi-star-half', routerLink: '/tax/pajak-masukan-nonap' }
+                                ]}
+                            ]
+                        },
+                        // { label: 'Pajak Keluaran', icon: 'pi pi-fw pi-circle', items: [
+                        //     { label: 'Input Pajak Keluaran', icon: 'pi pi-fw pi-bookmark', routerLink: '/tax/input-pajak-keluaran' }
+                        // ]},
+                        // { label: 'Pajak Masukan', icon: 'pi pi-fw pi-circle', items: [
+                        //     { label: 'Bahan', icon: 'pi pi-fw pi-bookmark', routerLink: '/tax/pajak-masukan-bahan' },
+                        //     { label: 'Non A/P', icon: 'pi pi-fw pi-bookmark', routerLink: '/tax/pajak-masukan-nonap' }
+                        // ]}
                     ]}
                 ]
             },
             {
                 items: [
-                    { label: 'General', icon: 'pi pi-cog', items: [
+                    { label: 'General', icon: 'pi pi-gauge', items: [
                         { label: 'Non Trade', icon: 'pi pi-arrow-right-arrow-left', items: [
                             { label: 'Access Nontrade', icon: 'pi pi-user', items: [
                                 { label: 'Access TTD', icon: 'pi pi-bookmark', routerLink: '/nontrade/access-nontrade' }
