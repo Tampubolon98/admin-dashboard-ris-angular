@@ -31,7 +31,7 @@ export class AddEmployeeDialogComponent {
   selectedCompany: string | undefined;
   nohandphone: string = '';
   joinDate: Date | null = new Date;
-  nik: string = '';
+  nokk: string = '';
   noktp: string = '';
   uploadimage: string = '';
   selectedGender: any;
@@ -95,7 +95,6 @@ export class AddEmployeeDialogComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    console.log('adaaaa', file);
 
     if (file) {
       this.selectedFile = file;
@@ -111,33 +110,13 @@ export class AddEmployeeDialogComponent {
   }
   
   saveData() {
-    if(!this.uploadimage) {
+    if(!this.imagePreview) {
         this.showError('Silahkan Upload Image');
         return;
     }
 
-    if (!this.alamat) {
-        this.showError('Alamat Wajib Diisi');
-        return;
-    }
-
     if (!this.fullname) {
-        this.showError('Alamat Wajib Diisi');
-        return;
-    }
-
-    if (!this.noktp) {
-        this.showError('No KTP Wajib Diisi');
-        return;
-    }
-
-    if (!this.nik) {
-        this.showError('NIK Wajib Diisi');
-        return;
-    }
-
-    if (!this.nohandphone) {
-        this.showError('No Handphone Wajib Diisi');
+        this.showError('Nama Employee Wajib Diisi');
         return;
     }
 
@@ -146,8 +125,32 @@ export class AddEmployeeDialogComponent {
         return;
     }
 
+    if (!this.alamat) {
+        this.showError('Alamat Wajib Diisi');
+        return;
+    }
+
+    if (!this.selectedStoreCode) {
+      this.showError('Silahkan Pilih Store Code');
+    }
+
     if (!this.selectedCompany) {
         this.showError('Silahkan Pilih Perusahaan');
+        return;
+    }
+
+    if (!this.nohandphone) {
+        this.showError('No Handphone Wajib Diisi');
+        return;
+    }
+
+    if (!this.nokk) {
+        this.showError('No Kartu Keluarga Wajib Diisi');
+        return;
+    }
+
+    if (!this.noktp) {
+        this.showError('No KTP Wajib Diisi');
         return;
     }
 
