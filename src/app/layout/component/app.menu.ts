@@ -24,6 +24,34 @@ export class AppMenu {
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-gauge', routerLink: ['/'] }]
             },
             {
+                items: [{ 
+                    label: 'Acc & Finance', 
+                    icon: 'pi pi-fw pi-gauge',
+                    items: [{
+                        label: 'Member Perusahaan',
+                        icon: 'pi pi-fw pi-circle',
+                        items: [
+                            {
+                                label: 'Kartu Perusahaan',
+                                icon: 'pi pi-fw pi-credit-card',
+                                items: [
+                                    {
+                                        label: 'Transaksi Kartu Member',
+                                        icon: 'pi pi-fw pi-star-half',
+                                        routerLink: ['member/index-transaksi']
+                                    },
+                                    {
+                                        label: 'Verifikasi Pembayaran Member',
+                                        icon: 'pi pi-fw pi-star-half',
+                                        routerLink: ['member/index-verifikasi']
+                                    }
+                                ]
+                            }
+                        ]
+                    }] 
+                }]
+            },
+            {
                 items: [
                     {
                         label: 'Human Resource',
