@@ -1,0 +1,36 @@
+<div class="card">
+            <div class="font-semibold text-xl mb-4">Report Sales ID</div>
+            <div class="flex justify-between items-center flex-column sm:flex-row">
+                <div class="mb-4">
+                    <div class="flex flex-col md:flex-row gap-6 mb-4">
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="kodetoko">Kode Toko :</label>
+                            <p-select 
+                                [options]="storeCodeOptions"
+                                [(ngModel)]="selectedStoreCode"
+                                optionLabel="label"
+                                [showClear]="true"
+                                placeholder="Pilih Kode Toko"
+                                class="w-165"
+                            >
+                            </p-select>
+                        </div>
+                    
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="kategorikaryawan">Date Range :</label>
+                            <p-datepicker 
+                                [(ngModel)]="date2" 
+                                [showIcon]="true" 
+                                [dateFormat]="dateFormat"
+                                inputId="date_birth" 
+                                [showOnFocus]="true"
+                                class="w-165" />
+                        </div>
+                    </div>
+
+                    <p-button label="Export PDF" severity="danger" class="mr-2" icon="pi pi-file-pdf"></p-button>
+
+                    <p-button label="Export XLS" severity="success" class="mr-2" icon="pi pi-file-excel"></p-button>
+                </div>
+            </div>
+        </div>
