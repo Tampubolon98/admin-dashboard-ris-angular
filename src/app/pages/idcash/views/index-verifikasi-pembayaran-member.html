@@ -38,7 +38,7 @@
             <div class="flex flex-col md:flex-row mb-4">
                 <p-button label="Clear Filter" severity="danger" class="mr-2" (onClick)="clearFilter()"></p-button>
 
-                <p-button label="Search" severity="danger" class="mr-2"></p-button>
+                <p-button label="Search" severity="danger" class="mr-2" (onClick)="loadMembers()"></p-button>
             </div>
             
             <p-button label="Export XLS" severity="success" class="mr-2" icon="pi pi-file-excel"></p-button>
@@ -109,7 +109,7 @@
         
         <ng-template #body let-member>
             <tr>
-                <td>
+                <td (click)="openDetailMember(member)">
                     {{ member?.id_kasbon || '-' }}
                 </td>
                 <td>
