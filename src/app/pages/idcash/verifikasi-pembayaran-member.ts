@@ -21,7 +21,8 @@ import {ObjectUtils} from "primeng/utils";
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { DatePickerModule } from 'primeng/datepicker';
-
+import { DetailPembayaranMember } from "./modal/detail-pembayaran-member.component";
+import { DynamicDialogConfig } from "primeng/dynamicdialog";
 
 
 interface expandedRows {
@@ -71,21 +72,18 @@ interface Country {
 export class VerifikasiPembayaranMember implements OnInit {
     members: MemberMilkyverse[] = [];
     representatives: Representative[] = [];
-    statuses: any[] = [];
     rowGroupMetadata: any;
     expandedRows: expandedRows = {};
     activityValues: number[] = [0, 100];
     isExpanded: boolean = false;
-    balanceFrozen: boolean = false;
     loading: boolean = true;
-    selectedCategory: any;
-    selectedStoreCode: any;
     dateRange: Date[] | null = null;
     dateFormat: string = 'dd-mm-yy';
     ref: DynamicDialogRef | undefined;
     id_batch: string | null = null;
 
     constructor(
+        // private config: DynamicDialogConfig,
         private dialogService: DialogService,
         private memberMilkyverseService: MemberMilkyverseService,
         private messageService: MessageService
@@ -105,11 +103,24 @@ export class VerifikasiPembayaranMember implements OnInit {
         this.id_batch = null;
     }
 
+    private formatDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    }
+
     loadMembers() {
+        const periode = this.dateRange;
+
+        const start_date = periode?.[0] ? this.formatDate(periode[0]) : null;
+        const end_date = periode?.[1] ? this.formatDate(periode[1]) : null;
+        const id_batch = this.id_batch;
+        const status = this.selectedStatus?.value;
+
         this.loading = true;
-        this.memberMilkyverseService.getMemberPembayaran().subscribe({
+        this.memberMilkyverseService.getMemberPembayaran(id_batch, status, start_date, end_date).subscribe({
             next: (res) => {
-                console.log("cek1", res);
                 this.members = res;
                 this.loading = false;
                 this.messageService.add({
@@ -129,6 +140,46 @@ export class VerifikasiPembayaranMember implements OnInit {
         });
     }
 
+    loadDetailMember(id_batch: string) {
+        this.loading = true;
+
+        this.memberMilkyverseService.getDetailMemberPembayaran(id_batch).subscribe({
+            next: (res) => {
+                this.loading = false;
+
+                this.ref = this.dialogService.open(DetailPembayaranMember, {
+                    header: 'Detail Pembayaran Member',
+                    width: '50%',
+                    data: {
+                        detail: res
+                    }
+                });
+
+                setTimeout(() => {
+                    const dialog = document.querySelector('.p-dialog');
+
+                    if (dialog) {
+                        const title = dialog.querySelector('.p-dialog-title') as HTMLElement;
+
+                        if (title) {
+                            title.style.width = '100%';
+                            title.style.textAlign = 'center';
+                        }
+                    }
+                });
+            },
+            error: () => {
+                this.loading = false;
+
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Failed to load detail data.'
+                });
+            }
+        });
+    }
+
     ngOnInit() {
         this.loadMembers();
     }
@@ -136,6 +187,10 @@ export class VerifikasiPembayaranMember implements OnInit {
     collapseAll() {
         this.expandedRows = {};
         this.isExpanded = false;
+    }
+
+    openDetailMember(member: MemberMilkyverse) {
+        this.loadDetailMember(member.id_kasbon);
     }
 
     formatCurrency(value: number) {
