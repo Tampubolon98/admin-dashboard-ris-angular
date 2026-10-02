@@ -151,7 +151,8 @@ export class VerifikasiPembayaranMember implements OnInit {
                     header: 'Detail Pembayaran Member',
                     width: '50%',
                     data: {
-                        detail: res
+                        detail: res.data,
+                        total_nominal: res.total_nominal
                     }
                 });
 

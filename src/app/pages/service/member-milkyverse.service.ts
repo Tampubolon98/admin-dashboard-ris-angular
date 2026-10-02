@@ -28,6 +28,18 @@ export interface ApiResponse {
     data: MemberMilkyverse[] | MemberMilkyverse;
 }
 
+export interface DetailPembayaranResponse {
+    data: MemberMilkyverse[];
+    total_nominal: number;
+}
+
+export interface ApiResponseDtl {
+    success: boolean;
+    message: string;
+    total_nominal: number;
+    data: MemberMilkyverse[] | MemberMilkyverse;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -66,21 +78,20 @@ export class MemberMilkyverseService {
         );
     }
 
-    getDetailMemberPembayaran(id_batch: string | null):Observable<MemberMilkyverse[]> {
+    getDetailMemberPembayaran(id_batch: string | null):Observable<DetailPembayaranResponse> {
         let params = new HttpParams()
 
         if (id_batch) {
             params = params.set('id_batch', id_batch);
         }
 
-        return this.http.get<ApiResponse>(`${this.apiurl}/member/get-detail-pembayaran`, {params}).pipe(
-            map(response => {
-                if (Array.isArray(response.data)) {
-                    return response.data;
-                } else {
-                    return [];
-                }
-            })
+        return this.http.get<ApiResponseDtl>(`${this.apiurl}/member/get-detail-pembayaran`, {params}).pipe(
+            map(response => ({
+                data: Array.isArray(response.data)
+                    ? response.data
+                    : [],
+                total_nominal: response.total_nominal
+            }))
         );
     }
 }
