@@ -65,6 +65,7 @@ export class DetailPembayaranMember {
     id_batch: string = '';
     total_pembayaran: string = '';
     tanggal_transfer: Date | null = null;
+    member: any[] = [];
     loading: boolean = true;
 
     constructor(
@@ -76,16 +77,23 @@ export class DetailPembayaranMember {
         this.ref.close();
     }
 
+    getTotalNominal(): number {
+        return this.member.reduce((total, item) => {
+            return total + Number(item.nominal_transfer || 0);
+        }, 0);
+    }
+
     ngOnInit() {
         const data = this.config.data.detail;
+         this.member = this.config.data.detail ?? [];
+        const total_nominal = this.config.data.total_nominal;
 
-        this.id_batch = data.id_kasbon;
-        this.tanggal_transfer = new Date(data.tanggal_transfer);
-        this.total_pembayaran = data.nominal_transfer;
-        // this.total_pembayaran = data
-        // .filter((item: any) => item.id_kasbon === this.id_batch)
-        // .reduce((total: number, item: any) => {
-        //     return total + Number(item.nominal_transfer || 0);
-        // }, 0);
+        this.id_batch = data[0].id_kasbon;
+        this.tanggal_transfer = new Date(data[0].tanggal_transfer);
+        this.total_pembayaran = new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(Number(total_nominal));
+        this.loading = false;
     }
 }

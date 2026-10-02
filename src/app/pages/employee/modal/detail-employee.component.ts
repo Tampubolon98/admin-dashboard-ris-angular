@@ -113,7 +113,6 @@ export class DetailMasterEmployeeComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    console.log('adaaaa', file);
 
     if (file) {
       this.selectedFile = file;
@@ -145,8 +144,6 @@ export class DetailMasterEmployeeComponent {
         this.noktp = data.no_ktp;
         this.jenis_kelamin = data.jenis_kelamin;
         this.status = data.status;
-
-        console.log('cekkkkk', this.image_employee, data.image_employee);
 
         this.selectedCategory = this.categoryOptions.find(
           item => item.value === data.kategori_karyawan

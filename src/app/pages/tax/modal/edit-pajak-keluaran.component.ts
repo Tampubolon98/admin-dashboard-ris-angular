@@ -92,7 +92,6 @@ export class EditPajakKeluaran {
 
     ngOnInit() {
         const data = this.config.data?.taxkeluaran;
-        console.log('cekkk', data);
 
         if (data) {
             this.customer_id = data.customer_id;
